@@ -51,11 +51,23 @@ class State:
     def calldataload(self) -> None:
         self.push(f_calldataload(self.pop()))
 
+    def calldatasize(self) -> None:
+        self.push(f_calldatasize())
+
+    def lt(self) -> None:
+        x: word = self.pop()
+        y: word = self.pop()
+        self.push(If(x < y, con(1), con(0)))
+
     def __str__(self) -> str:
         return "stack:  " + str(self.stack) + "\n" + \
                "memory: " + str(self.memory)
 
+def con(n: int) -> Word:
+    return BitVecVal(n, 256)
+
 f_calldataload = Function('calldataload', BitVecSort(256), BitVecSort(256))
+f_calldatasize = Function('calldatasize', BitVecSort(256))
 
 class Exec:
     pgm: List[Opcode]
@@ -93,8 +105,16 @@ class Exec:
             self.st.mstore()
         elif o.op[0] == 'CALLDATALOAD':
             self.st.calldataload()
+        elif o.op[0] == 'CALLDATASIZE':
+            self.st.calldatasize()
+        elif o.op[0] == 'LT':
+            self.st.lt()
         elif o.op[0] == 'STOP':
             return
+        else:
+            print(self.pc)
+            print(self.st)
+            raise Exception('unsupported opcode: ' + o.op[0])
 
         self.next_pc()
         self.run()
