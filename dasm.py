@@ -17,7 +17,7 @@ class State:
         self.memory: List[Byte] = []
 
     def push(self, v: Word) -> None:
-        self.stack.insert(0, v)
+        self.stack.insert(0, simplify(v))
 
     def pop(self) -> Word:
         v = self.stack[0]
@@ -46,18 +46,7 @@ class State:
 
     def mload(self) -> None:
         loc: int = self.mloc()
-        self.push(simplify(Concat(self.memory[loc:loc+32])))
-
-    def calldataload(self) -> None:
-        self.push(f_calldataload(self.pop()))
-
-    def calldatasize(self) -> None:
-        self.push(f_calldatasize())
-
-    def lt(self) -> None:
-        x: word = self.pop()
-        y: word = self.pop()
-        self.push(If(x < y, con(1), con(0)))
+        self.push(Concat(self.memory[loc:loc+32]))
 
     def __str__(self) -> str:
         return "stack:  " + str(self.stack) + "\n" + \
@@ -73,6 +62,7 @@ class Exec:
     pgm: List[Opcode]
     st: State
     pc: int
+    sol: Solver
 
     def __init__(self, ops: List[Opcode], st: State, pc: int) -> None:
         self.pgm = [None for _ in range(ops[-1].pc + 1)]
@@ -80,6 +70,7 @@ class Exec:
             self.pgm[o.pc] = o
         self.st = st
         self.pc = pc
+        self.sol = Solver()
 
     def next_pc(self) -> int:
         self.pc += 1
@@ -88,32 +79,93 @@ class Exec:
 
     def run(self) -> None:
         o = self.pgm[self.pc]
-        # PUSH1 -- PUSH32
-        if int('60', 16) <= int(o.hx, 16) <= int('7f', 16):
-            self.st.push(BitVecVal(int(o.op[1], 16), 256))
-        # DUP1 -- DUP16
-        elif int('80', 16) <= int(o.hx, 16) <= int('8f', 16):
-            self.st.dup(int(o.hx, 16) - int('80', 16) + 1)
-        # SWAP1 -- SWAP16
-        elif int('90', 16) <= int(o.hx, 16) <= int('9f', 16):
-            self.st.swap(int(o.hx, 16) - int('90', 16) + 1)
+        if o.op[0] == 'STOP':
+            return
+
+        elif o.op[0] == 'ADD':
+            self.st.push(self.st.pop() + self.st.pop())
+        elif o.op[0] == 'MUL':
+            self.st.push(self.st.pop() * self.st.pop())
+        elif o.op[0] == 'SUB':
+            self.st.push(self.st.pop() - self.st.pop())
+        elif o.op[0] == 'SDIV':
+            self.st.push(self.st.pop() / self.st.pop())
+        elif o.op[0] == 'SMOD':
+            self.st.push(self.st.pop() % self.st.pop())
+        elif o.op[0] == 'DIV':
+            self.st.push(UDiv(self.st.pop(), self.st.pop()))
+        elif o.op[0] == 'MOD':
+            self.st.push(URem(self.st.pop(), self.st.pop()))
+
+        elif o.op[0] == 'LT':
+            self.st.push(If(ULT(self.st.pop(), self.st.pop()), con(1), con(0)))
+        elif o.op[0] == 'GT':
+            self.st.push(If(UGT(self.st.pop(), self.st.pop()), con(1), con(0)))
+        elif o.op[0] == 'SLT':
+            self.st.push(If(self.st.pop() < self.st.pop(), con(1), con(0)))
+        elif o.op[0] == 'SGT':
+            self.st.push(If(self.st.pop() > self.st.pop(), con(1), con(0)))
+        elif o.op[0] == 'EQ':
+            self.st.push(If(self.st.pop() == self.st.pop(), con(1), con(0)))
+        elif o.op[0] == 'ISZERO':
+            self.st.push(If(self.st.pop() == con(0), con(1), con(0)))
+
+        elif o.op[0] == 'AND':
+            self.st.push(self.st.pop() & self.st.pop())
+        elif o.op[0] == 'OR':
+            self.st.push(self.st.pop() | self.st.pop())
+        elif o.op[0] == 'NOT':
+            self.st.push(~ self.st.pop())
+        elif o.op[0] == 'SHL':
+            self.st.push(self.st.pop() << self.st.pop())
+        elif o.op[0] == 'SAR':
+            self.st.push(self.st.pop() >> self.st.pop())
+        elif o.op[0] == 'SHR':
+            self.st.push(LShR(self.st.pop(), self.st.pop()))
+
+        elif o.op[0] == 'CALLDATALOAD':
+            self.st.push(f_calldataload(self.st.pop()))
+        elif o.op[0] == 'CALLDATASIZE':
+            self.st.push(f_calldatasize())
+
         elif o.op[0] == 'POP':
             self.st.pop()
         elif o.op[0] == 'MLOAD':
             self.st.mload()
         elif o.op[0] == 'MSTORE':
             self.st.mstore()
-        elif o.op[0] == 'CALLDATALOAD':
-            self.st.calldataload()
-        elif o.op[0] == 'CALLDATASIZE':
-            self.st.calldatasize()
-        elif o.op[0] == 'LT':
-            self.st.lt()
-        elif o.op[0] == 'STOP':
+
+        elif o.op[0] == 'JUMPI':
+            target: int = int(str(self.st.pop())) # target must be concrete
+            cond: Word = self.st.pop()
+
+            self.sol.push()
+            self.sol.add(cond != con(0))
+            if self.sol.check() != unsat: # jump
+                pass
+            self.sol.pop()
+
+            self.sol.add(cond == con(0))
+            if self.sol.check() == unsat:
+                return
+
+        elif o.op[0] == 'JUMPDEST':
+            pass
+
+        elif int('60', 16) <= int(o.hx, 16) <= int('7f', 16): # PUSH1 -- PUSH32
+            self.st.push(con(int(o.op[1], 16)))
+        elif int('80', 16) <= int(o.hx, 16) <= int('8f', 16): # DUP1  -- DUP16
+            self.st.dup(int(o.hx, 16) - int('80', 16) + 1)
+        elif int('90', 16) <= int(o.hx, 16) <= int('9f', 16): # SWAP1 -- SWAP16
+            self.st.swap(int(o.hx, 16) - int('90', 16) + 1)
+
+        elif o.op[0] == 'REVERT':
             return
+
         else:
             print(self.pc)
             print(self.st)
+            print(self.sol)
             raise Exception('unsupported opcode: ' + o.op[0])
 
         self.next_pc()
