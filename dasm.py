@@ -5,8 +5,8 @@ from z3 import *
 from typing import List, Dict, Any
 from byte2op import Opcode, decode
 
-Word = Any
-Byte = Any
+Word = Any # z3 expression (including constants)
+Byte = Any # z3 expression (including constants)
 
 class State:
     stack: List[Word]
