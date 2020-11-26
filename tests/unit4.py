@@ -6,14 +6,16 @@ hexcode = '608060405260043610603f576000357c0100000000000000000000000000000000000
 
 ops = decode(hexcode)
 
-ex = dasm(ops)
-print(ex.pc)
-print(ex.st)
-print(ex.sol)
-#print(ex.pgm)
+exs = dasm(ops)
+for ex in exs:
+    print(ex)
+#   print(ex.pc)
+#   print(ex.st)
+#   print(ex.sol)
+#   #print(ex.pgm)
 
-s = Solver()
-s.add(Not(
-    ex.st.stack[2] == Concat(BitVecVal(0, 224), Extract(255, 224, f_calldataload(0)))
-))
-print(s.check())
+#   s = Solver()
+#   s.add(Not(
+#       ex.st.stack[2] == Concat(BitVecVal(0, 224), Extract(255, 224, f_calldataload(0)))
+#   ))
+#   print(s.check())

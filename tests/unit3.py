@@ -11,13 +11,15 @@ ops.append(Opcode(6, '60', ['PUSH1', '00']))
 ops.append(Opcode(8, '51', ['MLOAD']))
 ops.append(Opcode(9, '00', ['STOP']))
 
-ex = dasm(ops)
-print(ex.pc)
-print(ex.st)
-#print(ex.pgm)
+exs = dasm(ops)
+for ex in exs:
+    print(ex)
+#   print(ex.pc)
+#   print(ex.st)
+#   #print(ex.pgm)
 
-s = Solver()
-s.add(Not(
-    ex.st.stack[0] == Concat(BitVecVal(0, 224), Extract(255, 224, f_calldataload(0)))
-))
-print(s.check())
+    s = Solver()
+    s.add(Not(
+        ex.st.stack[0] == Concat(BitVecVal(0, 224), Extract(255, 224, f_calldataload(0)))
+    ))
+    print(s.check())

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 
 import sys
+from copy import deepcopy
 from z3 import *
 from typing import List, Dict, Any
 from byte2op import Opcode, decode
@@ -15,6 +16,16 @@ class State:
     def __init__(self) -> None:
         self.stack: List[Word] = []
         self.memory: List[Byte] = []
+
+    def __deepcopy__(self, memo):
+        st = State()
+        st.stack = deepcopy(self.stack)
+        st.memory = deepcopy(self.memory)
+        return st
+
+    def __str__(self) -> str:
+        return "stack:  " + str(self.stack) + "\n" + \
+               "memory: " + str(self.memory)
 
     def push(self, v: Word) -> None:
         self.stack.insert(0, simplify(v))
@@ -48,15 +59,19 @@ class State:
         loc: int = self.mloc()
         self.push(Concat(self.memory[loc:loc+32]))
 
-    def __str__(self) -> str:
-        return "stack:  " + str(self.stack) + "\n" + \
-               "memory: " + str(self.memory)
-
 def con(n: int) -> Word:
     return BitVecVal(n, 256)
 
 f_calldataload = Function('calldataload', BitVecSort(256), BitVecSort(256))
 f_calldatasize = Function('calldatasize', BitVecSort(256))
+f_callvalue = Function('callvalue', BitVecSort(256))
+
+# convert opcode list to opcode map
+def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
+    pgm: List[Opcode] = [None for _ in range(ops[-1].pc + 1)]
+    for o in ops:
+        pgm[o.pc] = o
+    return pgm
 
 class Exec:
     pgm: List[Opcode]
@@ -64,118 +79,149 @@ class Exec:
     pc: int
     sol: Solver
 
-    def __init__(self, ops: List[Opcode], st: State, pc: int) -> None:
-        self.pgm = [None for _ in range(ops[-1].pc + 1)]
-        for o in ops:
-            self.pgm[o.pc] = o
+    def __init__(self, pgm: List[Opcode], st: State, pc: int, sol: Solver) -> None:
+        self.pgm = pgm
         self.st = st
         self.pc = pc
-        self.sol = Solver()
+        self.sol = sol
+
+    def __str__(self) -> str:
+        return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
+               str(self.st) + "\n" + \
+               str(self.sol)
 
     def next_pc(self) -> int:
         self.pc += 1
         while self.pgm[self.pc] is None:
             self.pc += 1
 
-    def run(self) -> None:
-        o = self.pgm[self.pc]
+def run(ex0: Exec) -> List[Exec]:
+    out: List[Exec] = []
+
+    stack: List[Exec] = [ex0]
+    while stack:
+        ex = stack.pop()
+
+        o = ex.pgm[ex.pc]
+
         if o.op[0] == 'STOP':
-            return
+            out.append(ex)
+            continue
 
-        elif o.op[0] == 'ADD':
-            self.st.push(self.st.pop() + self.st.pop())
-        elif o.op[0] == 'MUL':
-            self.st.push(self.st.pop() * self.st.pop())
-        elif o.op[0] == 'SUB':
-            self.st.push(self.st.pop() - self.st.pop())
-        elif o.op[0] == 'SDIV':
-            self.st.push(self.st.pop() / self.st.pop())
-        elif o.op[0] == 'SMOD':
-            self.st.push(self.st.pop() % self.st.pop())
-        elif o.op[0] == 'DIV':
-            self.st.push(UDiv(self.st.pop(), self.st.pop()))
-        elif o.op[0] == 'MOD':
-            self.st.push(URem(self.st.pop(), self.st.pop()))
+        elif o.op[0] == 'REVERT':
+            out.append(ex)
+            continue
 
-        elif o.op[0] == 'LT':
-            self.st.push(If(ULT(self.st.pop(), self.st.pop()), con(1), con(0)))
-        elif o.op[0] == 'GT':
-            self.st.push(If(UGT(self.st.pop(), self.st.pop()), con(1), con(0)))
-        elif o.op[0] == 'SLT':
-            self.st.push(If(self.st.pop() < self.st.pop(), con(1), con(0)))
-        elif o.op[0] == 'SGT':
-            self.st.push(If(self.st.pop() > self.st.pop(), con(1), con(0)))
-        elif o.op[0] == 'EQ':
-            self.st.push(If(self.st.pop() == self.st.pop(), con(1), con(0)))
-        elif o.op[0] == 'ISZERO':
-            self.st.push(If(self.st.pop() == con(0), con(1), con(0)))
-
-        elif o.op[0] == 'AND':
-            self.st.push(self.st.pop() & self.st.pop())
-        elif o.op[0] == 'OR':
-            self.st.push(self.st.pop() | self.st.pop())
-        elif o.op[0] == 'NOT':
-            self.st.push(~ self.st.pop())
-        elif o.op[0] == 'SHL':
-            self.st.push(self.st.pop() << self.st.pop())
-        elif o.op[0] == 'SAR':
-            self.st.push(self.st.pop() >> self.st.pop())
-        elif o.op[0] == 'SHR':
-            self.st.push(LShR(self.st.pop(), self.st.pop()))
-
-        elif o.op[0] == 'CALLDATALOAD':
-            self.st.push(f_calldataload(self.st.pop()))
-        elif o.op[0] == 'CALLDATASIZE':
-            self.st.push(f_calldatasize())
-
-        elif o.op[0] == 'POP':
-            self.st.pop()
-        elif o.op[0] == 'MLOAD':
-            self.st.mload()
-        elif o.op[0] == 'MSTORE':
-            self.st.mstore()
+        elif o.op[0] == 'RETURN':
+            out.append(ex)
+            continue
 
         elif o.op[0] == 'JUMPI':
-            target: int = int(str(self.st.pop())) # target must be concrete
-            cond: Word = self.st.pop()
+            target: int = int(str(ex.st.pop())) # target must be concrete
+            cond: Word = ex.st.pop()
 
-            self.sol.push()
-            self.sol.add(cond != con(0))
-            if self.sol.check() != unsat: # jump
-                pass
-            self.sol.pop()
+            ex.sol.push()
+            ex.sol.add(cond != con(0))
+            if ex.sol.check() != unsat: # jump
+                new_sol = Solver()
+                new_sol.add(ex.sol.assertions())
+                new_ex = Exec(ex.pgm, deepcopy(ex.st), target, new_sol)
+                stack.append(new_ex)
+            ex.sol.pop()
 
-            self.sol.add(cond == con(0))
-            if self.sol.check() == unsat:
-                return
+            ex.sol.add(cond == con(0))
+            if ex.sol.check() != unsat:
+                ex.next_pc()
+                stack.append(ex)
+
+            continue
+
+        elif o.op[0] == 'JUMP':
+            target: int = int(str(ex.st.pop())) # target must be concrete
+            ex.pc = target
+            stack.append(ex)
+            continue
 
         elif o.op[0] == 'JUMPDEST':
             pass
 
-        elif int('60', 16) <= int(o.hx, 16) <= int('7f', 16): # PUSH1 -- PUSH32
-            self.st.push(con(int(o.op[1], 16)))
-        elif int('80', 16) <= int(o.hx, 16) <= int('8f', 16): # DUP1  -- DUP16
-            self.st.dup(int(o.hx, 16) - int('80', 16) + 1)
-        elif int('90', 16) <= int(o.hx, 16) <= int('9f', 16): # SWAP1 -- SWAP16
-            self.st.swap(int(o.hx, 16) - int('90', 16) + 1)
+        elif o.op[0] == 'ADD':
+            ex.st.push(ex.st.pop() + ex.st.pop())
+        elif o.op[0] == 'MUL':
+            ex.st.push(ex.st.pop() * ex.st.pop())
+        elif o.op[0] == 'SUB':
+            ex.st.push(ex.st.pop() - ex.st.pop())
+        elif o.op[0] == 'SDIV':
+            ex.st.push(ex.st.pop() / ex.st.pop())
+        elif o.op[0] == 'SMOD':
+            ex.st.push(ex.st.pop() % ex.st.pop())
+        elif o.op[0] == 'DIV':
+            ex.st.push(UDiv(ex.st.pop(), ex.st.pop()))
+        elif o.op[0] == 'MOD':
+            ex.st.push(URem(ex.st.pop(), ex.st.pop()))
 
-        elif o.op[0] == 'REVERT':
-            return
+        elif o.op[0] == 'LT':
+            ex.st.push(If(ULT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
+        elif o.op[0] == 'GT':
+            ex.st.push(If(UGT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
+        elif o.op[0] == 'SLT':
+            ex.st.push(If(ex.st.pop() < ex.st.pop(), con(1), con(0)))
+        elif o.op[0] == 'SGT':
+            ex.st.push(If(ex.st.pop() > ex.st.pop(), con(1), con(0)))
+        elif o.op[0] == 'EQ':
+            ex.st.push(If(ex.st.pop() == ex.st.pop(), con(1), con(0)))
+        elif o.op[0] == 'ISZERO':
+            ex.st.push(If(ex.st.pop() == con(0), con(1), con(0)))
+
+        elif o.op[0] == 'AND':
+            ex.st.push(ex.st.pop() & ex.st.pop())
+        elif o.op[0] == 'OR':
+            ex.st.push(ex.st.pop() | ex.st.pop())
+        elif o.op[0] == 'NOT':
+            ex.st.push(~ ex.st.pop())
+        elif o.op[0] == 'SHL':
+            ex.st.push(ex.st.pop() << ex.st.pop())
+        elif o.op[0] == 'SAR':
+            ex.st.push(ex.st.pop() >> ex.st.pop())
+        elif o.op[0] == 'SHR':
+            ex.st.push(LShR(ex.st.pop(), ex.st.pop()))
+
+        elif o.op[0] == 'CALLDATALOAD':
+            ex.st.push(f_calldataload(ex.st.pop()))
+        elif o.op[0] == 'CALLDATASIZE':
+            ex.st.push(f_calldatasize())
+        elif o.op[0] == 'CALLVALUE':
+            ex.st.push(f_callvalue())
+
+        elif o.op[0] == 'POP':
+            ex.st.pop()
+        elif o.op[0] == 'MLOAD':
+            ex.st.mload()
+        elif o.op[0] == 'MSTORE':
+            ex.st.mstore()
+
+        elif int('60', 16) <= int(o.hx, 16) <= int('7f', 16): # PUSH1 -- PUSH32
+            ex.st.push(con(int(o.op[1], 16)))
+        elif int('80', 16) <= int(o.hx, 16) <= int('8f', 16): # DUP1  -- DUP16
+            ex.st.dup(int(o.hx, 16) - int('80', 16) + 1)
+        elif int('90', 16) <= int(o.hx, 16) <= int('9f', 16): # SWAP1 -- SWAP16
+            ex.st.swap(int(o.hx, 16) - int('90', 16) + 1)
 
         else:
-            print(self.pc)
-            print(self.st)
-            print(self.sol)
-            raise Exception('unsupported opcode: ' + o.op[0])
+        #   print(ex)
+        #   raise Exception('unsupported opcode: ' + o.op[0])
+            out.append(ex)
+            continue
 
-        self.next_pc()
-        self.run()
+        ex.next_pc()
+        stack.append(ex)
 
-def dasm(ops: List[Opcode]) -> Exec:
+    return out
+
+def dasm(ops: List[Opcode]) -> List[Exec]:
     st = State()
-    ex = Exec(ops, st, 0)
-    ex.run()
-    return ex
+    ex = Exec(ops_to_pgm(ops), st, 0, Solver())
+    return run(ex)
 
 if __name__ == '__main__':
     hexcode: str = input()
