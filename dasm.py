@@ -28,7 +28,8 @@ class State:
                "memory: " + str(self.memory)
 
     def push(self, v: Word) -> None:
-        self.stack.insert(0, simplify(v))
+        #self.stack.insert(0, simplify(v))
+        self.stack.insert(0, v)
 
     def pop(self) -> Word:
         v = self.stack[0]
@@ -154,7 +155,8 @@ def run(ex0: Exec) -> List[Exec]:
             cond: Word = ex.st.pop()
 
             ex.sol.push()
-            ex.sol.add(simplify(simp(cond != con(0))))
+            #ex.sol.add(simplify(simp(cond != con(0))))
+            ex.sol.add(cond != con(0))
             if ex.sol.check() != unsat: # jump
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
@@ -165,7 +167,8 @@ def run(ex0: Exec) -> List[Exec]:
 #               print("unsat: " + str(ex.sol))
             ex.sol.pop()
 
-            ex.sol.add(simplify(simp(cond == con(0))))
+            #ex.sol.add(simplify(simp(cond == con(0))))
+            ex.sol.add(cond == con(0))
             if ex.sol.check() != unsat:
                 ex.next_pc()
                 stack.append(ex)
