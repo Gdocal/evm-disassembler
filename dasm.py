@@ -95,12 +95,45 @@ class Exec:
         while self.pgm[self.pc] is None:
             self.pc += 1
 
+# TODO: cleanup
+def simp(expr: Word) -> Word:
+#   print("start " + str(expr))
+    # expr: 0 == If(cond, 1, 0)  ==>  Not(cond)
+    # expr: 0 != If(cond, 1, 0)  ==>      cond
+    # expr: 0 == If(cond, 0, 1)  ==>      cond
+    # expr: 0 != If(cond, 0, 1)  ==>  Not(cond)
+    if (expr.decl().name() == '=' or expr.decl().name() == 'distinct') and eq(expr.arg(0), con(0)):
+#       print("then-1")
+        rhs = expr.arg(1)
+        # If(cond, 1, 0)
+        if rhs.decl().name() == 'if' and eq(rhs.arg(1), con(1)) and eq(rhs.arg(2), con(0)):
+#           print("then-2")
+            cond = simp(rhs.arg(0))
+            if expr.decl().name() == '=':
+                return Not(cond)
+            else: # expr.decl().name() == 'distinct':
+                return cond
+        # If(cond, 0, 1)
+        elif rhs.decl().name() == 'if' and eq(rhs.arg(1), con(0)) and eq(rhs.arg(2), con(1)):
+            cond = simp(rhs.arg(0))
+            if expr.decl().name() == '=':
+                return cond
+            else: # expr.decl().name() == 'distinct':
+                return Not(cond)
+        else:
+            return expr
+#           print("else-2")
+    else:
+        return expr
+#       print("else-1")
+
 def run(ex0: Exec) -> List[Exec]:
     out: List[Exec] = []
 
     stack: List[Exec] = [ex0]
     while stack:
         ex = stack.pop()
+#       print(ex)
 
         o = ex.pgm[ex.pc]
 
@@ -121,18 +154,23 @@ def run(ex0: Exec) -> List[Exec]:
             cond: Word = ex.st.pop()
 
             ex.sol.push()
-            ex.sol.add(cond != con(0))
+            ex.sol.add(simplify(simp(cond != con(0))))
             if ex.sol.check() != unsat: # jump
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
                 new_ex = Exec(ex.pgm, deepcopy(ex.st), target, new_sol)
                 stack.append(new_ex)
+#               print('jump')
+#           else:
+#               print("unsat: " + str(ex.sol))
             ex.sol.pop()
 
-            ex.sol.add(cond == con(0))
+            ex.sol.add(simplify(simp(cond == con(0))))
             if ex.sol.check() != unsat:
                 ex.next_pc()
                 stack.append(ex)
+#           else:
+#               print("unsat: " + str(ex.sol))
 
             continue
 
@@ -221,9 +259,9 @@ def run(ex0: Exec) -> List[Exec]:
 
     return out
 
-def dasm(ops: List[Opcode]) -> List[Exec]:
+def dasm(ops: List[Opcode], sol: Solver = Solver()) -> List[Exec]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), st, 0, Solver())
+    ex = Exec(ops_to_pgm(ops), st, 0, sol)
     return run(ex)
 
 if __name__ == '__main__':
