@@ -180,11 +180,14 @@ def run(ex0: Exec) -> List[Exec]:
         elif o.op[0] == 'NOT':
             ex.st.push(~ ex.st.pop())
         elif o.op[0] == 'SHL':
-            ex.st.push(ex.st.pop() << ex.st.pop())
+            w = ex.st.pop()
+            ex.st.push(ex.st.pop() << w)
         elif o.op[0] == 'SAR':
-            ex.st.push(ex.st.pop() >> ex.st.pop())
+            w = ex.st.pop()
+            ex.st.push(ex.st.pop() >> w)
         elif o.op[0] == 'SHR':
-            ex.st.push(LShR(ex.st.pop(), ex.st.pop()))
+            w = ex.st.pop()
+            ex.st.push(LShR(ex.st.pop(), w))
 
         elif o.op[0] == 'CALLDATALOAD':
             ex.st.push(f_calldataload(ex.st.pop()))
