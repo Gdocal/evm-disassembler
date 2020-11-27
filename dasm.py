@@ -178,7 +178,8 @@ def run(ex0: Exec) -> List[Exec]:
     stack: List[Exec] = [ex0]
     while stack:
         ex = stack.pop()
-#       print(ex)
+        if __debug__:
+            print(ex)
 
         o = ex.pgm[ex.pc]
 
@@ -207,7 +208,8 @@ def run(ex0: Exec) -> List[Exec]:
                 new_sol.add(ex.sol.assertions())
                 new_ex = Exec(ex.pgm, deepcopy(ex.st), target, new_sol)
                 stack.append(new_ex)
-#               print('jump')
+                if __debug__:
+                    print('jump')
 #           else:
 #               print("unsat: " + str(ex.sol))
             ex.sol.pop()
