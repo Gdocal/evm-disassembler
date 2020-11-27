@@ -1,0 +1,568 @@
+477 REVERT
+stack:  [0, 0, 115792089237316195423570985008687907853269984665640564039457584007913129639932 +
+calldatasize, 4, 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Not(Or(ULE(132, calldatasize),
+        Extract(255, 2, calldatasize) == 0))]
+504 REVERT
+stack:  [0, 0, calldataload(4), 36, 4, calldatasize, 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ Not(And(Extract(255, 33, calldataload(4)) == 0,
+         ULE(Extract(32, 0, calldataload(4)), 4294967296)))]
+522 REVERT
+stack:  [0, 0, 4 + calldataload(4), 36, 4, calldatasize, 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ Not(ULE(36 + calldataload(4), calldatasize))]
+556 REVERT
+stack:  [0, 0, 36, calldataload(4 + calldataload(4)), 36 + calldataload(4), 4, calldatasize, 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Or(Not(ULE(36 +
+            calldataload(4) +
+            calldataload(4 + calldataload(4)),
+            calldatasize)),
+    Not(And(Extract(255,
+                    33,
+                    calldataload(4 + calldataload(4))) ==
+            0,
+            ULE(Extract(32,
+                        0,
+                        calldataload(4 + calldataload(4))),
+                4294967296))))]
+586 REVERT
+stack:  [0, 0, calldataload(36), 68, 4, calldatasize, calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ Not(And(Extract(255, 33, calldataload(36)) == 0,
+         ULE(Extract(32, 0, calldataload(36)), 4294967296)))]
+604 REVERT
+stack:  [0, 0, 4 + calldataload(36), 68, 4, calldatasize, calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ Not(ULE(36 + calldataload(36), calldatasize))]
+638 REVERT
+stack:  [0, 0, 68, calldataload(4 + calldataload(36)), 36 + calldataload(36), 4, calldatasize, calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Or(Not(ULE(36 +
+            calldataload(36) +
+            calldataload(4 + calldataload(36)),
+            calldatasize)),
+    Not(And(Extract(255,
+                    33,
+                    calldataload(4 + calldataload(36))) ==
+            0,
+            ULE(Extract(32,
+                        0,
+                        calldataload(4 + calldataload(36))),
+                4294967296))))]
+668 REVERT
+stack:  [0, 0, calldataload(68), 100, 4, calldatasize, calldataload(4 + calldataload(36)), 36 + calldataload(36), calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(36) +
+                calldataload(4 + calldataload(36)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(36))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(36))),
+                    4294967296))))),
+ Not(And(Extract(255, 33, calldataload(68)) == 0,
+         ULE(Extract(32, 0, calldataload(68)), 4294967296)))]
+686 REVERT
+stack:  [0, 0, 4 + calldataload(68), 100, 4, calldatasize, calldataload(4 + calldataload(36)), 36 + calldataload(36), calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(36) +
+                calldataload(4 + calldataload(36)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(36))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(36))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(68)) == 0,
+     ULE(Extract(32, 0, calldataload(68)), 4294967296)),
+ Not(ULE(36 + calldataload(68), calldatasize))]
+720 REVERT
+stack:  [0, 0, 100, calldataload(4 + calldataload(68)), 36 + calldataload(68), 4, calldatasize, calldataload(4 + calldataload(36)), 36 + calldataload(36), calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(36) +
+                calldataload(4 + calldataload(36)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(36))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(36))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(68)) == 0,
+     ULE(Extract(32, 0, calldataload(68)), 4294967296)),
+ ULE(36 + calldataload(68), calldatasize),
+ Or(Not(ULE(36 +
+            calldataload(68) +
+            calldataload(4 + calldataload(68)),
+            calldatasize)),
+    Not(And(Extract(255,
+                    33,
+                    calldataload(4 + calldataload(68))) ==
+            0,
+            ULE(Extract(32,
+                        0,
+                        calldataload(4 + calldataload(68))),
+                4294967296))))]
+750 REVERT
+stack:  [0, 0, calldataload(100), 132, 4, calldatasize, calldataload(4 + calldataload(68)), 36 + calldataload(68), calldataload(4 + calldataload(36)), 36 + calldataload(36), calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(36) +
+                calldataload(4 + calldataload(36)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(36))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(36))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(68)) == 0,
+     ULE(Extract(32, 0, calldataload(68)), 4294967296)),
+ ULE(36 + calldataload(68), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(68) +
+                calldataload(4 + calldataload(68)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(68))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(68))),
+                    4294967296))))),
+ Not(And(Extract(255, 33, calldataload(100)) == 0,
+         ULE(Extract(32, 0, calldataload(100)), 4294967296)))]
+768 REVERT
+stack:  [0, 0, 4 + calldataload(100), 132, 4, calldatasize, calldataload(4 + calldataload(68)), 36 + calldataload(68), calldataload(4 + calldataload(36)), 36 + calldataload(36), calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(36) +
+                calldataload(4 + calldataload(36)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(36))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(36))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(68)) == 0,
+     ULE(Extract(32, 0, calldataload(68)), 4294967296)),
+ ULE(36 + calldataload(68), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(68) +
+                calldataload(4 + calldataload(68)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(68))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(68))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(100)) == 0,
+     ULE(Extract(32, 0, calldataload(100)), 4294967296)),
+ Not(ULE(36 + calldataload(100), calldatasize))]
+802 REVERT
+stack:  [0, 0, 132, calldataload(4 + calldataload(100)), 36 + calldataload(100), 4, calldatasize, calldataload(4 + calldataload(68)), 36 + calldataload(68), calldataload(4 + calldataload(36)), 36 + calldataload(36), calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(36) +
+                calldataload(4 + calldataload(36)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(36))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(36))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(68)) == 0,
+     ULE(Extract(32, 0, calldataload(68)), 4294967296)),
+ ULE(36 + calldataload(68), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(68) +
+                calldataload(4 + calldataload(68)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(68))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(68))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(100)) == 0,
+     ULE(Extract(32, 0, calldataload(100)), 4294967296)),
+ ULE(36 + calldataload(100), calldatasize),
+ Or(Not(And(Extract(255,
+                    33,
+                    calldataload(4 + calldataload(100))) ==
+            0,
+            ULE(Extract(32,
+                        0,
+                        calldataload(4 + calldataload(100))),
+                4294967296))),
+    Not(ULE(36 +
+            calldataload(100) +
+            32*calldataload(4 + calldataload(100)),
+            calldatasize)))]
+2340 SLOAD
+stack:  [0, calldataload(4 + calldataload(100)), 36 + calldataload(100), calldataload(4 + calldataload(68)), 36 + calldataload(68), calldataload(4 + calldataload(36)), 36 + calldataload(36), calldataload(4 + calldataload(4)), 36 + calldataload(4), 203, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ ULE(4, calldatasize),
+ ULE(2220280665, Extract(255, 224, calldataload(0))),
+ ULE(3357955511, Extract(255, 224, calldataload(0))),
+ Extract(255, 224, calldataload(0)) == 3357955511,
+ Or(ULE(132, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(4) +
+                calldataload(4 + calldataload(4)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(36)) == 0,
+     ULE(Extract(32, 0, calldataload(36)), 4294967296)),
+ ULE(36 + calldataload(36), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(36) +
+                calldataload(4 + calldataload(36)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(36))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(36))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(68)) == 0,
+     ULE(Extract(32, 0, calldataload(68)), 4294967296)),
+ ULE(36 + calldataload(68), calldatasize),
+ Not(Or(Not(ULE(36 +
+                calldataload(68) +
+                calldataload(4 + calldataload(68)),
+                calldatasize)),
+        Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(68))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(68))),
+                    4294967296))))),
+ And(Extract(255, 33, calldataload(100)) == 0,
+     ULE(Extract(32, 0, calldataload(100)), 4294967296)),
+ ULE(36 + calldataload(100), calldatasize),
+ Not(Or(Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(100))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 +
+                                        calldataload(100))),
+                    4294967296))),
+        Not(ULE(36 +
+                calldataload(100) +
+                32*calldataload(4 + calldataload(100)),
+                calldatasize))))]
+181 REVERT
+stack:  [0, 0]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+[Extract(255, 224, calldataload(0)) == 3357955511,
+ Not(ULE(4, calldatasize))]
