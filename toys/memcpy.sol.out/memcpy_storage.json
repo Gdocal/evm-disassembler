@@ -1,0 +1,1 @@
+{"storage":[{"astId":4,"contract":"memcpy.sol:memcpy","label":"data","offset":0,"slot":"0","type":"t_array(t_uint256)dyn_storage"}],"types":{"t_array(t_uint256)dyn_storage":{"base":"t_uint256","encoding":"dynamic_array","label":"uint256[]","numberOfBytes":"32"},"t_uint256":{"encoding":"inplace","label":"uint256","numberOfBytes":"32"}}}

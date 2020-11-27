@@ -60,6 +60,12 @@ class State:
         loc: int = self.mloc()
         self.push(Concat(self.memory[loc:loc+32]))
 
+    def sha3(self) -> None:
+        loc: int = self.mloc()
+        size: int = int(str(self.pop())) # size (in bytes) must be concrete
+        sha3: Any = Function('sha3_'+str(size*8), BitVecSort(size*8), BitVecSort(256))
+        self.push(sha3(Concat(self.memory[loc:loc+size])))
+
 def con(n: int) -> Word:
     return BitVecVal(n, 256)
 
@@ -79,16 +85,19 @@ class Exec:
     st: State
     pc: int
     sol: Solver
+    storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
 
-    def __init__(self, pgm: List[Opcode], st: State, pc: int, sol: Solver) -> None:
+    def __init__(self, pgm: List[Opcode], st: State, pc: int, sol: Solver, storage: Any) -> None:
         self.pgm = pgm
         self.st = st
         self.pc = pc
         self.sol = sol
+        self.storage = storage
 
     def __str__(self) -> str:
         return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
                str(self.st) + "\n" + \
+               str(self.storage) + "\n" + \
                str(self.sol)
 
     def next_pc(self) -> int:
@@ -206,7 +215,7 @@ def run(ex0: Exec) -> List[Exec]:
             if ex.sol.check() != unsat: # jump
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, deepcopy(ex.st), target, new_sol)
+                new_ex = Exec(ex.pgm, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage))
                 stack.append(new_ex)
                 if __debug__:
                     print('jump')
@@ -300,12 +309,20 @@ def run(ex0: Exec) -> List[Exec]:
         elif o.op[0] == 'CALLVALUE':
             ex.st.push(f_callvalue())
 
+        elif o.op[0] == 'SHA3':
+            ex.st.sha3()
+
         elif o.op[0] == 'POP':
             ex.st.pop()
         elif o.op[0] == 'MLOAD':
             ex.st.mload()
         elif o.op[0] == 'MSTORE':
             ex.st.mstore()
+
+        elif o.op[0] == 'SLOAD':
+            ex.st.push(Select(ex.storage, ex.st.pop()))
+        elif o.op[0] == 'SSTORE':
+            ex.storage = Store(ex.storage, ex.st.pop(), ex.st.pop())
 
         elif int('60', 16) <= int(o.hx, 16) <= int('7f', 16): # PUSH1 -- PUSH32
             ex.st.push(con(int(o.op[1], 16)))
@@ -325,9 +342,9 @@ def run(ex0: Exec) -> List[Exec]:
 
     return out
 
-def dasm(ops: List[Opcode], sol: Solver = Solver()) -> List[Exec]:
+def dasm(ops: List[Opcode], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256))) -> List[Exec]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), st, 0, sol)
+    ex = Exec(ops_to_pgm(ops), st, 0, sol, storage)
     return run(ex)
 
 if __name__ == '__main__':

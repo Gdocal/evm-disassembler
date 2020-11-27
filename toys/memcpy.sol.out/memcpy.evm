@@ -1,0 +1,224 @@
+    /* "memcpy.sol":65:257  contract memcpy {... */
+  mstore(0x40, 0x80)
+  callvalue
+  dup1
+  iszero
+  tag_1
+  jumpi
+  0x00
+  dup1
+  revert
+tag_1:
+  pop
+  dataSize(sub_0)
+  dup1
+  dataOffset(sub_0)
+  0x00
+  codecopy
+  0x00
+  return
+stop
+
+sub_0: assembly {
+        /* "memcpy.sol":65:257  contract memcpy {... */
+      mstore(0x40, 0x80)
+      callvalue
+      dup1
+      iszero
+      tag_1
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_1:
+      pop
+      jumpi(tag_2, lt(calldatasize, 0x04))
+      shr(0xe0, calldataload(0x00))
+      dup1
+      0x8b44cef1
+      eq
+      tag_3
+      jumpi
+    tag_2:
+      0x00
+      dup1
+      revert
+        /* "memcpy.sol":189:255  function foo(uint[] calldata d) external {... */
+    tag_3:
+      tag_4
+      0x04
+      dup1
+      calldatasize
+      sub
+      0x20
+      dup2
+      lt
+      iszero
+      tag_5
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_5:
+      dup2
+      add
+      swap1
+      0x20
+      dup2
+      add
+      dup2
+      calldataload
+      0x0100000000
+      dup2
+      gt
+      iszero
+      tag_6
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_6:
+      dup3
+      add
+      dup4
+      0x20
+      dup3
+      add
+      gt
+      iszero
+      tag_7
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_7:
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap2
+      dup5
+      0x20
+      dup4
+      mul
+      dup5
+      add
+      gt
+      0x0100000000
+      dup4
+      gt
+      or
+      iszero
+      tag_8
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_8:
+      pop
+      swap1
+      swap3
+      pop
+      swap1
+      pop
+      tag_9
+      jump	// in
+    tag_4:
+      stop
+    tag_9:
+        /* "memcpy.sol":240:248  data = d */
+      tag_11
+        /* "memcpy.sol":240:244  data */
+      0x00
+        /* "memcpy.sol":247:248  d */
+      dup4
+      dup4
+        /* "memcpy.sol":240:248  data = d */
+      tag_12
+      jump	// in
+    tag_11:
+      pop
+        /* "memcpy.sol":189:255  function foo(uint[] calldata d) external {... */
+      pop
+      pop
+      jump	// out
+    tag_12:
+      dup3
+      dup1
+      sload
+      dup3
+      dup3
+      sstore
+      swap1
+      0x00
+      mstore
+      keccak256(0x00, 0x20)
+      swap1
+      dup2
+      add
+      swap3
+      dup3
+      iszero
+      tag_15
+      jumpi
+      swap2
+      0x20
+      mul
+      dup3
+      add
+    tag_14:
+      dup3
+      dup2
+      gt
+      iszero
+      tag_15
+      jumpi
+      dup3
+      calldataload
+      dup3
+      sstore
+      swap2
+      0x20
+      add
+      swap2
+      swap1
+      0x01
+      add
+      swap1
+      jump(tag_14)
+    tag_15:
+      pop
+      tag_16
+      swap3
+      swap2
+      pop
+      tag_17
+      jump	// in
+    tag_16:
+      pop
+      swap1
+      jump	// out
+    tag_17:
+      tag_18
+      swap2
+      swap1
+    tag_19:
+      dup1
+      dup3
+      gt
+      iszero
+      tag_16
+      jumpi
+      0x00
+      dup2
+      sstore
+      0x01
+      add
+      jump(tag_19)
+    tag_18:
+      swap1
+      jump	// out
+
+    auxdata: 0xa264697066735822122068d5d045c283d9172f8dee5d9232705e3ff164830e187f0809a7d65cc8b96d3264736f6c634300060b0033
+}

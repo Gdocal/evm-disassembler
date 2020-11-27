@@ -1,0 +1,59 @@
+161 STOP
+stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+Store(Store(Store(Store(Store(storage,
+                              0,
+                              calldataload(4 +
+                                        calldataload(4))),
+                        sha3_256(0),
+                        calldataload(36 + calldataload(4))),
+                  1 + sha3_256(0),
+                  calldataload(68 + calldataload(4))),
+            2 + sha3_256(0),
+            0),
+      3 + sha3_256(0),
+      0)
+[Extract(255, 224, calldataload(0)) == 2336542449,
+ 32 == calldataload(4),
+ 2 == calldataload(36),
+ 132 == calldatasize,
+ 0 == callvalue,
+ UGT(sha3_256(0), 100),
+ ULT(sha3_256(0), 1000),
+ 4 == storage[0],
+ callvalue == 0,
+ ULE(4, calldatasize),
+ Extract(255, 224, calldataload(0)) == 2336542449,
+ Or(ULE(36, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ And(Extract(255, 33, calldataload(4)) == 0,
+     ULE(Extract(32, 0, calldataload(4)), 4294967296)),
+ ULE(36 + calldataload(4), calldatasize),
+ Not(Or(Not(And(Extract(255,
+                        33,
+                        calldataload(4 + calldataload(4))) ==
+                0,
+                ULE(Extract(32,
+                            0,
+                            calldataload(4 + calldataload(4))),
+                    4294967296))),
+        Not(ULE(36 +
+                calldataload(4) +
+                32*calldataload(4 + calldataload(4)),
+                calldatasize)))),
+ Not(calldataload(4 + calldataload(4)) == 0),
+ Not(ULE(36 +
+         calldataload(4) +
+         32*calldataload(4 + calldataload(4)),
+         36 + calldataload(4))),
+ Not(ULE(36 +
+         calldataload(4) +
+         32*calldataload(4 + calldataload(4)),
+         68 + calldataload(4))),
+ ULE(36 +
+     calldataload(4) +
+     32*calldataload(4 + calldataload(4)),
+     100 + calldataload(4)),
+ Not(ULE(sha3_256(0) + storage[0], 2 + sha3_256(0))),
+ Not(ULE(sha3_256(0) + storage[0], 3 + sha3_256(0))),
+ ULE(sha3_256(0) + storage[0], 4 + sha3_256(0))]
