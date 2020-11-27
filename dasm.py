@@ -28,8 +28,8 @@ class State:
                "memory: " + str(self.memory)
 
     def push(self, v: Word) -> None:
-        #self.stack.insert(0, simplify(v))
-        self.stack.insert(0, v)
+        self.stack.insert(0, simplify(v))
+        #self.stack.insert(0, v)
 
     def pop(self) -> Word:
         v = self.stack[0]
@@ -128,6 +128,50 @@ def simp(expr: Word) -> Word:
         return expr
 #       print("else-1")
 
+#             x  == b   if sort(x) = bool
+# int_to_bool(x) == b   if sort(x) = int
+def test(x: Word, b: bool) -> Word:
+    if eq(x.sort(), BoolSort()):
+        if b:
+            return x
+        else:
+            return Not(x)
+    elif x.sort().name() == 'bv':
+        if b:
+            return (x != con(0))
+        else:
+            return (x == con(0))
+    else:
+        print(x)
+        raise Exception('invalid argument of test: ' + x)
+
+def is_non_zero(x: Word) -> Word:
+    return test(x, True)
+
+def is_zero(x: Word) -> Word:
+    return test(x, False)
+
+def and_or(x: Word, y: Word, is_and: bool) -> Word:
+    if eq(x.sort(), BoolSort()) and eq(y.sort(), BoolSort()):
+        if is_and:
+            return And(x, y)
+        else:
+            return Or(x, y)
+    elif x.sort().name() == 'bv' and y.sort().name() == 'bv':
+        if is_and:
+            return (x & y)
+        else:
+            return (x | y)
+    else:
+        print(x, y)
+        raise Exception('invalid argument of and/or: ' + x + y)
+
+def and_of(x: Word, y: Word) -> Word:
+    return and_or(x, y, True)
+
+def or_of(x: Word, y: Word) -> Word:
+    return and_or(x, y, False)
+
 def run(ex0: Exec) -> List[Exec]:
     out: List[Exec] = []
 
@@ -156,7 +200,8 @@ def run(ex0: Exec) -> List[Exec]:
 
             ex.sol.push()
             #ex.sol.add(simplify(simp(cond != con(0))))
-            ex.sol.add(cond != con(0))
+            #ex.sol.add(cond != con(0))
+            ex.sol.add(simplify(is_non_zero(cond)))
             if ex.sol.check() != unsat: # jump
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
@@ -168,7 +213,8 @@ def run(ex0: Exec) -> List[Exec]:
             ex.sol.pop()
 
             #ex.sol.add(simplify(simp(cond == con(0))))
-            ex.sol.add(cond == con(0))
+            #ex.sol.add(cond == con(0))
+            ex.sol.add(simplify(is_zero(cond)))
             if ex.sol.check() != unsat:
                 ex.next_pc()
                 stack.append(ex)
@@ -201,23 +247,38 @@ def run(ex0: Exec) -> List[Exec]:
         elif o.op[0] == 'MOD':
             ex.st.push(URem(ex.st.pop(), ex.st.pop()))
 
+#       elif o.op[0] == 'LT':
+#           ex.st.push(If(ULT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
+#       elif o.op[0] == 'GT':
+#           ex.st.push(If(UGT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
+#       elif o.op[0] == 'SLT':
+#           ex.st.push(If(ex.st.pop() < ex.st.pop(), con(1), con(0)))
+#       elif o.op[0] == 'SGT':
+#           ex.st.push(If(ex.st.pop() > ex.st.pop(), con(1), con(0)))
+#       elif o.op[0] == 'EQ':
+#           ex.st.push(If(ex.st.pop() == ex.st.pop(), con(1), con(0)))
+#       elif o.op[0] == 'ISZERO':
+#           ex.st.push(If(ex.st.pop() == con(0), con(1), con(0)))
+
         elif o.op[0] == 'LT':
-            ex.st.push(If(ULT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
+            ex.st.push(ULT(ex.st.pop(), ex.st.pop()))
         elif o.op[0] == 'GT':
-            ex.st.push(If(UGT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
+            ex.st.push(UGT(ex.st.pop(), ex.st.pop()))
         elif o.op[0] == 'SLT':
-            ex.st.push(If(ex.st.pop() < ex.st.pop(), con(1), con(0)))
+            ex.st.push(ex.st.pop() < ex.st.pop())
         elif o.op[0] == 'SGT':
-            ex.st.push(If(ex.st.pop() > ex.st.pop(), con(1), con(0)))
+            ex.st.push(ex.st.pop() > ex.st.pop())
         elif o.op[0] == 'EQ':
-            ex.st.push(If(ex.st.pop() == ex.st.pop(), con(1), con(0)))
+            ex.st.push(ex.st.pop() == ex.st.pop())
         elif o.op[0] == 'ISZERO':
-            ex.st.push(If(ex.st.pop() == con(0), con(1), con(0)))
+            ex.st.push(is_zero(ex.st.pop()))
 
         elif o.op[0] == 'AND':
-            ex.st.push(ex.st.pop() & ex.st.pop())
+            #ex.st.push(ex.st.pop() & ex.st.pop())
+            ex.st.push(and_of(ex.st.pop(), ex.st.pop()))
         elif o.op[0] == 'OR':
-            ex.st.push(ex.st.pop() | ex.st.pop())
+            #ex.st.push(ex.st.pop() | ex.st.pop())
+            ex.st.push(or_of(ex.st.pop(), ex.st.pop()))
         elif o.op[0] == 'NOT':
             ex.st.push(~ ex.st.pop())
         elif o.op[0] == 'SHL':
