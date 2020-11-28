@@ -53,6 +53,8 @@ class State:
     def mstore(self) -> None:
         loc: int = self.mloc()
         val: Word = self.pop()
+        if eq(val.sort(), BoolSort()):
+            val = If(val, con(1), con(0))
         for i in range(32):
             self.memory[loc + i] = simplify(Extract((31-i)*8+7, (31-i)*8, val))
 
@@ -65,6 +67,11 @@ class State:
         size: int = int(str(self.pop())) # size (in bytes) must be concrete
         sha3: Any = Function('sha3_'+str(size*8), BitVecSort(size*8), BitVecSort(256))
         self.push(sha3(Concat(self.memory[loc:loc+size])))
+
+    def ret(self) -> Word:
+        loc: int = self.mloc()
+        size: int = int(str(self.pop())) # size (in bytes) must be concrete
+        return Concat(self.memory[loc:loc+size])
 
 def con(n: int) -> Word:
     return BitVecVal(n, 256)
@@ -86,6 +93,7 @@ class Exec:
     pc: int
     sol: Solver
     storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
+    ret: Any
 
     def __init__(self, pgm: List[Opcode], st: State, pc: int, sol: Solver, storage: Any) -> None:
         self.pgm = pgm
@@ -93,12 +101,14 @@ class Exec:
         self.pc = pc
         self.sol = sol
         self.storage = storage
+        self.ret = None
 
     def __str__(self) -> str:
         return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
                str(self.st) + "\n" + \
-               str(self.storage) + "\n" + \
-               str(self.sol)
+               "storage: " + str(self.storage) + "\n" + \
+               "path: " + str(self.sol) + "\n" + \
+               "return: " + str(self.ret) + "\n"
 
     def next_pc(self) -> int:
         self.pc += 1
@@ -201,6 +211,7 @@ def run(ex0: Exec) -> List[Exec]:
             continue
 
         elif o.op[0] == 'RETURN':
+            ex.ret = simplify(ex.st.ret())
             out.append(ex)
             continue
 
