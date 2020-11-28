@@ -3,7 +3,7 @@
 import sys
 from copy import deepcopy
 from z3 import *
-from typing import List, Dict, Any
+from typing import List, Dict, Tuple, Any
 from byte2op import Opcode, decode
 
 Word = Any # z3 expression (including constants)
@@ -98,6 +98,7 @@ class Exec:
     sol: Solver
     storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
     ret: Any
+    log: List[Tuple[List[Word], Any]]
 
     def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any) -> None:
         self.pgm = pgm
@@ -107,13 +108,15 @@ class Exec:
         self.sol = sol
         self.storage = storage
         self.ret = None
+        self.log = []
 
     def __str__(self) -> str:
         return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
                str(self.st) + "\n" + \
                "storage: " + str(self.storage) + "\n" + \
                "path: " + str(self.sol) + "\n" + \
-               "output: " + str(self.ret) + "\n"
+               "output: " + str(self.ret) + "\n" + \
+               "log: " + str(self.log) + "\n"
 
     def next_pc(self) -> int:
         self.pc += 1
@@ -347,6 +350,15 @@ def run(ex0: Exec) -> List[Exec]:
             size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
             for i in range(size):
                 ex.st.memory[loc + i] = BitVecVal(int(ex.code[pc + i], 16), 8)
+
+        elif int('a0', 16) <= int(o.hx, 16) <= int('a4', 16): # LOG0 -- LOG4
+            num_keys: int = int(o.hx, 16) - int('a0', 16)
+            loc: int = ex.st.mloc()
+            size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
+            keys = []
+            for _ in range(num_keys):
+                keys.append(ex.st.pop())
+            ex.log.append((keys, simplify(Concat(ex.st.memory[loc:loc+size])) if size > 0 else None))
 
         elif int('60', 16) <= int(o.hx, 16) <= int('7f', 16): # PUSH1 -- PUSH32
             ex.st.push(con(int(o.op[1], 16)))

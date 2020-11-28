@@ -4,5 +4,6 @@ memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 storage: storage
 path: []
 output: None
+log: []
 
 unsat
