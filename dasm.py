@@ -325,6 +325,11 @@ def run(ex0: Exec) -> List[Exec]:
         elif o.op[0] == 'MOD':
             ex.st.push(URem(ex.st.pop(), ex.st.pop()))
 
+        elif o.op[0] == 'EXP':
+            w1: int = int(str(ex.st.pop())) # must be concrete
+            w2: int = int(str(ex.st.pop())) # must be concrete
+            ex.st.push(con(w1 ** w2))
+
 #       elif o.op[0] == 'LT':
 #           ex.st.push(If(ULT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
 #       elif o.op[0] == 'GT':
