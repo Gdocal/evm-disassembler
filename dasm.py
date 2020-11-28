@@ -92,13 +92,13 @@ class State:
 def con(n: int) -> Word:
     return BitVecVal(n, 256)
 
-f_calldataload = Function('calldataload', BitVecSort(256), BitVecSort(256))
+f_calldataload = Function('calldataload', BitVecSort(256), BitVecSort(256)) # index
 f_calldatasize = Function('calldatasize', BitVecSort(256))
 f_callvalue = Function('callvalue', BitVecSort(256))
 f_caller = Function('caller', BitVecSort(256))
 f_address = Function('address', BitVecSort(256))
-f_extcodesize = Function('extcodesize', BitVecSort(256), BitVecSort(256))
-f_gas = Function('extcodesize', IntSort(), IntSort(), BitVecSort(256))
+f_extcodesize = Function('extcodesize', BitVecSort(256), BitVecSort(256)) # target address
+f_gas = Function('gas', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
 
 # convert opcode list to opcode map
 def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
@@ -118,16 +118,16 @@ class Exec:
     log: List[Tuple[List[Word], Any]]
     cnt: int
 
-    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any) -> None:
+    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, ret: Any, log: List[Tuple[List[Word], Any]], cnt: int) -> None:
         self.pgm = pgm
         self.code = code
         self.st = st
         self.pc = pc
         self.sol = sol
         self.storage = storage
-        self.ret = None
-        self.log = []
-        self.cnt = 0
+        self.ret = ret
+        self.log = log
+        self.cnt = cnt
 
     def __str__(self) -> str:
         return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
@@ -220,18 +220,21 @@ def and_of(x: Word, y: Word) -> Word:
 def or_of(x: Word, y: Word) -> Word:
     return and_or(x, y, False)
 
-def call(ex: Exec) -> None:
+def call(ex: Exec, static: bool) -> None:
     gas = ex.st.pop()
     to = ex.st.pop()
-    fund = ex.st.pop()
+    if static:
+        fund = con(0)
+    else:
+        fund = ex.st.pop()
     arg_loc: int = ex.st.mloc()
     arg_size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
     ret_loc: int = ex.st.mloc()
     ret_size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
 
     # push exit code
-    f_call = Function('call_'+str(arg_size*8), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
-    exit_code = f_call(gas, to, fund, simplify(wload(ex.st.memory, arg_loc, arg_size)))
+    f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
+    exit_code = f_call(ex.pc, ex.cnt, gas, to, fund, simplify(wload(ex.st.memory, arg_loc, arg_size)))
     ex.st.push(exit_code)
 
     # store return value
@@ -240,6 +243,8 @@ def call(ex: Exec) -> None:
     wstore(ex.st.memory, ret_loc, ret_size, ret)
 #   for i in range(ret_size):
 #       ex.st.memory[ret_loc + i] = simplify(Extract((ret_size - i)*8+7, (ret_size - i)*8, ret))
+
+    ex.ret = ret
 
 def run(ex0: Exec) -> List[Exec]:
     out: List[Exec] = []
@@ -277,7 +282,7 @@ def run(ex0: Exec) -> List[Exec]:
             if ex.sol.check() != unsat: # jump
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage))
+                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.ret), deepcopy(ex.log), ex.cnt)
                 stack.append(new_ex)
                 if __debug__:
                     print('jump')
@@ -378,9 +383,15 @@ def run(ex0: Exec) -> List[Exec]:
             ex.st.push(f_extcodesize(ex.st.pop()))
         elif o.op[0] == 'GAS':
             ex.st.push(f_gas(ex.pc, ex.cnt))
+        elif o.op[0] == 'RETURNDATASIZE':
+            size: int = ex.ret.sort().size()
+            assert size % 8 == 0
+            ex.st.push(con(size / 8))
 
         elif o.op[0] == 'CALL':
-            call(ex)
+            call(ex, False)
+        elif o.op[0] == 'STATICCALL':
+            call(ex, True)
 
         elif o.op[0] == 'SHA3':
             ex.st.sha3()
@@ -438,9 +449,9 @@ def run(ex0: Exec) -> List[Exec]:
 
     return out
 
-def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256))) -> List[Exec]:
+def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), ret: Any = None, log = [], cnt: int = 0) -> List[Exec]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage)
+    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, ret, log, cnt)
     return run(ex)
 
 if __name__ == '__main__':
