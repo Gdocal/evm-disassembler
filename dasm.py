@@ -113,7 +113,7 @@ class Exec:
                str(self.st) + "\n" + \
                "storage: " + str(self.storage) + "\n" + \
                "path: " + str(self.sol) + "\n" + \
-               "return: " + str(self.ret) + "\n"
+               "output: " + str(self.ret) + "\n"
 
     def next_pc(self) -> int:
         self.pc += 1

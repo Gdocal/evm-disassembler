@@ -57,5 +57,5 @@ path: [Extract(255, 224, calldataload(0)) == 2336542449,
  Not(ULE(sha3_256(0) + storage[0], 2 + sha3_256(0))),
  Not(ULE(sha3_256(0) + storage[0], 3 + sha3_256(0))),
  ULE(sha3_256(0) + storage[0], 4 + sha3_256(0))]
-return: None
+output: None
 

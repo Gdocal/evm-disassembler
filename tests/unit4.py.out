@@ -4,7 +4,7 @@ memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 storage: storage
 path: [ULE(4, calldatasize),
  Not(Extract(255, 224, calldataload(0)) == 1264903314)]
-return: None
+output: None
 
 78 REVERT
 stack:  [callvalue, Concat(0, Extract(255, 224, calldataload(0)))]
@@ -13,7 +13,7 @@ storage: storage
 path: [ULE(4, calldatasize),
  Extract(255, 224, calldataload(0)) == 1264903314,
  Not(callvalue == 0)]
-return: None
+output: None
 
 195 RETURN
 stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
@@ -22,12 +22,12 @@ storage: storage
 path: [ULE(4, calldatasize),
  Extract(255, 224, calldataload(0)) == 1264903314,
  callvalue == 0]
-return: Concat(0, Extract(159, 0, calldataload(4)))
+output: Concat(0, Extract(159, 0, calldataload(4)))
 
 67 REVERT
 stack:  []
 memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
 storage: storage
 path: [Not(ULE(4, calldatasize))]
-return: None
+output: None
 
