@@ -71,7 +71,10 @@ class State:
     def ret(self) -> Word:
         loc: int = self.mloc()
         size: int = int(str(self.pop())) # size (in bytes) must be concrete
-        return Concat(self.memory[loc:loc+size])
+        if size > 0:
+            return simplify(Concat(self.memory[loc:loc+size]))
+        else:
+            return None
 
 def con(n: int) -> Word:
     return BitVecVal(n, 256)
@@ -89,14 +92,16 @@ def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
 
 class Exec:
     pgm: List[Opcode]
+    code: List[str]
     st: State
     pc: int
     sol: Solver
     storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
     ret: Any
 
-    def __init__(self, pgm: List[Opcode], st: State, pc: int, sol: Solver, storage: Any) -> None:
+    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any) -> None:
         self.pgm = pgm
+        self.code = code
         self.st = st
         self.pc = pc
         self.sol = sol
@@ -207,11 +212,12 @@ def run(ex0: Exec) -> List[Exec]:
             continue
 
         elif o.op[0] == 'REVERT':
+            ex.ret = ex.st.ret()
             out.append(ex)
             continue
 
         elif o.op[0] == 'RETURN':
-            ex.ret = simplify(ex.st.ret())
+            ex.ret = ex.st.ret()
             out.append(ex)
             continue
 
@@ -226,7 +232,7 @@ def run(ex0: Exec) -> List[Exec]:
             if ex.sol.check() != unsat: # jump
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage))
+                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage))
                 stack.append(new_ex)
                 if __debug__:
                     print('jump')
@@ -335,6 +341,13 @@ def run(ex0: Exec) -> List[Exec]:
         elif o.op[0] == 'SSTORE':
             ex.storage = Store(ex.storage, ex.st.pop(), ex.st.pop())
 
+        elif o.op[0] == 'CODECOPY':
+            loc: int = ex.st.mloc()
+            pc: int = int(str(ex.st.pop())) # pc must be concrete
+            size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
+            for i in range(size):
+                ex.st.memory[loc + i] = BitVecVal(int(ex.code[pc + i], 16), 8)
+
         elif int('60', 16) <= int(o.hx, 16) <= int('7f', 16): # PUSH1 -- PUSH32
             ex.st.push(con(int(o.op[1], 16)))
         elif int('80', 16) <= int(o.hx, 16) <= int('8f', 16): # DUP1  -- DUP16
@@ -353,9 +366,9 @@ def run(ex0: Exec) -> List[Exec]:
 
     return out
 
-def dasm(ops: List[Opcode], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256))) -> List[Exec]:
+def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256))) -> List[Exec]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), st, 0, sol, storage)
+    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage)
     return run(ex)
 
 if __name__ == '__main__':

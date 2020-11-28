@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 
 import sys
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 opcodes : Dict[str, str] = {
     '00' : 'STOP',
@@ -158,14 +158,15 @@ class Opcode:
         self.op = op
 
 # Decode ByteCodes to Opcodes
-def decode(hexcode: str) -> List[Opcode]:
+def decode(hexcode: str) -> Tuple[List[Opcode], List[str]]:
     if hexcode.startswith('0x'):
         hexcode = hexcode[2:]
+    code: List[str] = [hexcode[i:i+2] for i in range(0, len(hexcode), 2)]
     hx: str = ''
     ops: List[Opcode] = []
     pushcnt: int = 0
     cnt: int = -1
-    for item in [hexcode[i:i+2] for i in range(0, len(hexcode), 2)]:
+    for item in code:
         cnt += 1
         if pushcnt > 0:
             hx += item.lower()
@@ -183,7 +184,7 @@ def decode(hexcode: str) -> List[Opcode]:
     if hx: # hx is not empty
         ops[-1].op.append('ERROR ' + hx + ' (' + str(pushcnt) + ' bytes missed)')
 #       raise Exception("Not enough push bytes: " + hx)
-    return ops
+    return (ops, code)
 
 def print_opcodes(ops: List[Opcode], mode: str) -> None:
     width: int = len(str(ops[-1].pc)) # the number of digits of the max pc
@@ -208,4 +209,4 @@ def push_bytes(h: str, mode: str) -> str:
 if __name__ == '__main__':
     mode: str = 'int:hex' if len(sys.argv) < 2 else sys.argv[1]
     hexcode: str = input()
-    print_opcodes(decode(hexcode), mode)
+    print_opcodes(decode(hexcode)[0], mode)

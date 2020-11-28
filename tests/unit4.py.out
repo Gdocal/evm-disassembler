@@ -1,5 +1,5 @@
 67 REVERT
-stack:  [0, 0, Concat(0, Extract(255, 224, calldataload(0)))]
+stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
 memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
 storage: storage
 path: [ULE(4, calldatasize),
@@ -7,7 +7,7 @@ path: [ULE(4, calldatasize),
 return: None
 
 78 REVERT
-stack:  [0, 0, callvalue, Concat(0, Extract(255, 224, calldataload(0)))]
+stack:  [callvalue, Concat(0, Extract(255, 224, calldataload(0)))]
 memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
 storage: storage
 path: [ULE(4, calldatasize),
@@ -25,7 +25,7 @@ path: [ULE(4, calldatasize),
 return: Concat(0, Extract(159, 0, calldataload(4)))
 
 67 REVERT
-stack:  [0, 0]
+stack:  []
 memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
 storage: storage
 path: [Not(ULE(4, calldatasize))]

@@ -11,7 +11,7 @@ ops.append(Opcode(6, '60', ['PUSH1', '00']))
 ops.append(Opcode(8, '51', ['MLOAD']))
 ops.append(Opcode(9, '00', ['STOP']))
 
-exs = dasm(ops)
+exs = dasm(ops, [])
 for ex in exs:
     print(ex)
 #   print(ex.pc)
