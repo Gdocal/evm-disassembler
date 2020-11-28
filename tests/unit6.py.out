@@ -1,7 +1,7 @@
 161 STOP
 stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
 memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
-Store(Store(Store(Store(Store(storage,
+storage: Store(Store(Store(Store(Store(storage,
                               0,
                               calldataload(4 +
                                         calldataload(4))),
@@ -13,7 +13,7 @@ Store(Store(Store(Store(Store(storage,
             0),
       3 + sha3_256(0),
       0)
-[Extract(255, 224, calldataload(0)) == 2336542449,
+path: [Extract(255, 224, calldataload(0)) == 2336542449,
  32 == calldataload(4),
  2 == calldataload(36),
  132 == calldatasize,
@@ -57,3 +57,5 @@ Store(Store(Store(Store(Store(storage,
  Not(ULE(sha3_256(0) + storage[0], 2 + sha3_256(0))),
  Not(ULE(sha3_256(0) + storage[0], 3 + sha3_256(0))),
  ULE(sha3_256(0) + storage[0], 4 + sha3_256(0))]
+return: None
+
