@@ -98,6 +98,7 @@ f_callvalue = Function('callvalue', BitVecSort(256))
 f_caller = Function('caller', BitVecSort(256))
 f_address = Function('address', BitVecSort(256))
 f_extcodesize = Function('extcodesize', BitVecSort(256), BitVecSort(256))
+f_gas = Function('extcodesize', IntSort(), IntSort(), BitVecSort(256))
 
 # convert opcode list to opcode map
 def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
@@ -115,6 +116,7 @@ class Exec:
     storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
     ret: Any
     log: List[Tuple[List[Word], Any]]
+    cnt: int
 
     def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any) -> None:
         self.pgm = pgm
@@ -125,6 +127,7 @@ class Exec:
         self.storage = storage
         self.ret = None
         self.log = []
+        self.cnt = 0
 
     def __str__(self) -> str:
         return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
@@ -135,6 +138,7 @@ class Exec:
                "log: " + str(self.log) + "\n"
 
     def next_pc(self) -> int:
+        self.cnt += 1
         self.pc += 1
         while self.pgm[self.pc] is None:
             self.pc += 1
@@ -372,6 +376,8 @@ def run(ex0: Exec) -> List[Exec]:
             ex.st.push(f_address())
         elif o.op[0] == 'EXTCODESIZE':
             ex.st.push(f_extcodesize(ex.st.pop()))
+        elif o.op[0] == 'GAS':
+            ex.st.push(f_gas(ex.pc, ex.cnt))
 
         elif o.op[0] == 'CALL':
             call(ex)
