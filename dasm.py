@@ -347,7 +347,18 @@ def run(ex0: Exec) -> List[Exec]:
         elif o.op[0] == 'SGT':
             ex.st.push(ex.st.pop() > ex.st.pop())
         elif o.op[0] == 'EQ':
-            ex.st.push(ex.st.pop() == ex.st.pop())
+            w1 = ex.st.pop()
+            w2 = ex.st.pop()
+            if eq(w1.sort(), w2.sort()):
+                ex.st.push(w1 == w2)
+            else:
+                if eq(w1.sort(), BoolSort()):
+                    assert eq(w2.sort(), BitVecSort(256))
+                    ex.st.push(If(w1, con(1), con(0)) == w2)
+                else:
+                    assert eq(w1.sort(), BitVecSort(256))
+                    assert eq(w2.sort(), BoolSort())
+                    ex.st.push(w1 == If(w2, con(1), con(0)))
         elif o.op[0] == 'ISZERO':
             ex.st.push(is_zero(ex.st.pop()))
 
