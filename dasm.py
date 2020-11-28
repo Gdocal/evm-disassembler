@@ -15,7 +15,7 @@ def wload(mem: List[Byte], loc: int, size: int) -> Word:
 def wstore(mem: List[Byte], loc: int, size: int, val: Word) -> None:
     assert eq(val.sort(), BitVecSort(size*8))
     for i in range(size):
-        mem[loc + i] = simplify(Extract((size - i)*8+7, (size - i)*8, val))
+        mem[loc + i] = simplify(Extract((size-1 - i)*8+7, (size-1 - i)*8, val))
 
 class State:
     stack: List[Word]
@@ -64,24 +64,28 @@ class State:
         val: Word = self.pop()
         if eq(val.sort(), BoolSort()):
             val = If(val, con(1), con(0))
-        for i in range(32):
-            self.memory[loc + i] = simplify(Extract((31-i)*8+7, (31-i)*8, val))
+        wstore(self.memory, loc, 32, val)
+#       for i in range(32):
+#           self.memory[loc + i] = simplify(Extract((31-i)*8+7, (31-i)*8, val))
 
     def mload(self) -> None:
         loc: int = self.mloc()
-        self.push(Concat(self.memory[loc:loc+32]))
+        self.push(wload(self.memory, loc, 32))
+#       self.push(Concat(self.memory[loc:loc+32]))
 
     def sha3(self) -> None:
         loc: int = self.mloc()
         size: int = int(str(self.pop())) # size (in bytes) must be concrete
         sha3: Any = Function('sha3_'+str(size*8), BitVecSort(size*8), BitVecSort(256))
-        self.push(sha3(Concat(self.memory[loc:loc+size])))
+        self.push(sha3(wload(self.memory, loc, size)))
+#       self.push(sha3(Concat(self.memory[loc:loc+size])))
 
     def ret(self) -> Word:
         loc: int = self.mloc()
         size: int = int(str(self.pop())) # size (in bytes) must be concrete
         if size > 0:
-            return simplify(Concat(self.memory[loc:loc+size]))
+            return wload(self.memory, loc, size)
+#           return simplify(Concat(self.memory[loc:loc+size]))
         else:
             return None
 
@@ -404,7 +408,8 @@ def run(ex0: Exec) -> List[Exec]:
             keys = []
             for _ in range(num_keys):
                 keys.append(ex.st.pop())
-            ex.log.append((keys, simplify(Concat(ex.st.memory[loc:loc+size])) if size > 0 else None))
+            ex.log.append((keys, wload(ex.st.memory, loc, size) if size > 0 else None))
+#           ex.log.append((keys, simplify(Concat(ex.st.memory[loc:loc+size])) if size > 0 else None))
 
         elif int('60', 16) <= int(o.hx, 16) <= int('7f', 16): # PUSH1 -- PUSH32
             ex.st.push(con(int(o.op[1], 16)))
