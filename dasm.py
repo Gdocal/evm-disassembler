@@ -82,6 +82,7 @@ def con(n: int) -> Word:
 f_calldataload = Function('calldataload', BitVecSort(256), BitVecSort(256))
 f_calldatasize = Function('calldatasize', BitVecSort(256))
 f_callvalue = Function('callvalue', BitVecSort(256))
+f_caller = Function('caller', BitVecSort(256))
 
 # convert opcode list to opcode map
 def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
@@ -328,6 +329,8 @@ def run(ex0: Exec) -> List[Exec]:
             ex.st.push(f_calldatasize())
         elif o.op[0] == 'CALLVALUE':
             ex.st.push(f_callvalue())
+        elif o.op[0] == 'CALLER':
+            ex.st.push(f_caller())
 
         elif o.op[0] == 'SHA3':
             ex.st.sha3()
