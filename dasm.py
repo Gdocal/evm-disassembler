@@ -9,6 +9,14 @@ from byte2op import Opcode, decode
 Word = Any # z3 expression (including constants)
 Byte = Any # z3 expression (including constants)
 
+def wload(mem: List[Byte], loc: int, size: int) -> Word:
+    return simplify(Concat(mem[loc:loc+size])) # BitVecSort(size * 8)
+
+def wstore(mem: List[Byte], loc: int, size: int, val: Word) -> None:
+    assert eq(val.sort(), BitVecSort(size*8))
+    for i in range(size):
+        mem[loc + i] = simplify(Extract((size - i)*8+7, (size - i)*8, val))
+
 class State:
     stack: List[Word]
     memory: List[Byte]
@@ -203,6 +211,27 @@ def and_of(x: Word, y: Word) -> Word:
 def or_of(x: Word, y: Word) -> Word:
     return and_or(x, y, False)
 
+def call(ex: Exec) -> None:
+    gas = ex.st.pop()
+    to = ex.st.pop()
+    fund = ex.st.pop()
+    arg_loc: int = ex.st.mloc()
+    arg_size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
+    ret_loc: int = ex.st.mloc()
+    ret_size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
+
+    # push exit code
+    f_call = Function('call_'+str(arg_size*8), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
+    exit_code = f_call(gas, to, fund, simplify(wload(ex.st.memory, arg_loc, arg_size)))
+    ex.st.push(exit_code)
+
+    # store return value
+    f_ret = Function('ret_'+str(ret_size*8), BitVecSort(256), BitVecSort(ret_size*8))
+    ret = f_ret(exit_code)
+    wstore(ex.st.memory, ret_loc, ret_size, ret)
+#   for i in range(ret_size):
+#       ex.st.memory[ret_loc + i] = simplify(Extract((ret_size - i)*8+7, (ret_size - i)*8, ret))
+
 def run(ex0: Exec) -> List[Exec]:
     out: List[Exec] = []
 
@@ -336,6 +365,9 @@ def run(ex0: Exec) -> List[Exec]:
             ex.st.push(f_caller())
         elif o.op[0] == 'ADDRESS':
             ex.st.push(f_address())
+
+        elif o.op[0] == 'CALL':
+            call(ex)
 
         elif o.op[0] == 'SHA3':
             ex.st.sha3()
