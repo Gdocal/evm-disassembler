@@ -1,0 +1,75 @@
+15 REVERT
+stack:  [callvalue]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 618102892,
+ Not(callvalue == 0)]
+output: None
+
+102 REVERT
+stack:  [115792089237316195423570985008687907853269984665640564039457584007913129639932 +
+calldatasize, 4, 132, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 618102892,
+ callvalue == 0,
+ ULE(4, calldatasize),
+ Extract(255, 224, calldataload(0)) == 618102892,
+ Not(Or(ULE(36, calldatasize),
+        Extract(255, 2, calldatasize) == 0))]
+output: None
+
+942 REVERT
+stack:  [0, Concat(0, Extract(159, 0, calldataload(4))), 1, 277, 0, Concat(0, Extract(159, 0, calldataload(4))), 132, Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 195, 121, 160, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 82, 111, 108, 101, 115, 58, 32, 97, 99, 99, 111, 117, 110, 116, 32, 105, 115, 32, 116, 104, 101, 32, 122, 101, 114, 111, 32, 97, 100, 100, 114, 101, 115, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 618102892,
+ callvalue == 0,
+ ULE(4, calldatasize),
+ Extract(255, 224, calldataload(0)) == 618102892,
+ Or(ULE(36, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ Extract(159, 0, calldataload(4)) == 0]
+output: 6153991365495612155900636027672374423590526649800347271880663691463480803109403913816294060733134321992250056305029703065083882690465907441524573253073635884337765034959692637442076204411687282783307650146726821334308756607117585159734937607332211255237793410295637841860327535259932871721701064550362644480
+
+151 RETURN
+stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Extract(159, 152, calldataload(4)), Extract(151, 144, calldataload(4)), Extract(143, 136, calldataload(4)), Extract(135, 128, calldataload(4)), Extract(127, 120, calldataload(4)), Extract(119, 112, calldataload(4)), Extract(111, 104, calldataload(4)), Extract(103, 96, calldataload(4)), Extract(95, 88, calldataload(4)), Extract(87, 80, calldataload(4)), Extract(79, 72, calldataload(4)), Extract(71, 64, calldataload(4)), Extract(63, 56, calldataload(4)), Extract(55, 48, calldataload(4)), Extract(47, 40, calldataload(4)), Extract(39, 32, calldataload(4)), Extract(31, 24, calldataload(4)), Extract(23, 16, calldataload(4)), Extract(15, 8, calldataload(4)), Extract(7, 0, calldataload(4)), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, If(Extract(7,
+           0,
+           storage[sha3_512(Concat(0,
+                             Extract(159,
+                                     0,
+                                     calldataload(4)),
+                             1))]) ==
+   0,
+   0,
+   1)]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 618102892,
+ callvalue == 0,
+ ULE(4, calldatasize),
+ Extract(255, 224, calldataload(0)) == 618102892,
+ Or(ULE(36, calldatasize),
+    Extract(255, 2, calldatasize) == 0),
+ Not(Extract(159, 0, calldataload(4)) == 0)]
+output: Concat(0,
+       If(Extract(7,
+                  0,
+                  storage[sha3_512(Concat(0,
+                                    Extract(159,
+                                        0,
+                                        calldataload(4)),
+                                    1))]) ==
+          0,
+          0,
+          1))
+
+80 REVERT
+stack:  []
+memory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 618102892,
+ callvalue == 0,
+ Not(ULE(4, calldatasize))]
+output: None
+
