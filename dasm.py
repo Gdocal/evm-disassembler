@@ -28,6 +28,7 @@ class State:
                "memory: " + str(self.memory)
 
     def push(self, v: Word) -> None:
+        assert eq(v.sort(), BitVecSort(256)) or eq(v.sort(), BoolSort())
         self.stack.insert(0, simplify(v))
         #self.stack.insert(0, v)
 
@@ -185,7 +186,8 @@ def and_or(x: Word, y: Word, is_and: bool) -> Word:
             return And(x, y)
         else:
             return Or(x, y)
-    elif x.sort().name() == 'bv' and y.sort().name() == 'bv':
+    #elif x.sort().name() == 'bv' and y.sort().name() == 'bv':
+    elif eq(x.sort(), BitVecSort(256)) and eq(y.sort(), BitVecSort(256)):
         if is_and:
             return (x & y)
         else:
@@ -353,6 +355,12 @@ def run(ex0: Exec) -> List[Exec]:
             size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
             for i in range(size):
                 ex.st.memory[loc + i] = BitVecVal(int(ex.code[pc + i], 16), 8)
+
+        elif o.op[0] == 'BYTE':
+            idx: int = int(str(ex.st.pop())) # index must be concrete
+            assert idx >= 0 and idx < 32
+            w = ex.st.pop()
+            ex.st.push(ZeroExt(248, Extract((31-idx)*8+7, (31-idx)*8, w)))
 
         elif int('a0', 16) <= int(o.hx, 16) <= int('a4', 16): # LOG0 -- LOG4
             num_keys: int = int(o.hx, 16) - int('a0', 16)
