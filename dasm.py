@@ -554,6 +554,7 @@ def run(ex0: Exec) -> List[Exec]:
 
     return out
 
+@log_call(include_args=[], include_result=False)
 def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), ret: Any = None, log = [], cnt: int = 0) -> List[Exec]:
     st = State()
     ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, ret, log, cnt)
