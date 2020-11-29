@@ -103,6 +103,7 @@ f_caller = Function('caller', BitVecSort(256))
 f_address = Function('address', BitVecSort(256))
 f_extcodesize = Function('extcodesize', BitVecSort(256), BitVecSort(256)) # target address
 f_gas = Function('gas', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
+f_timestamp = Function('timestamp', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
 
 # convert opcode list to opcode map
 def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
@@ -472,6 +473,8 @@ def run(ex0: Exec) -> List[Exec]:
             ex.st.push(f_extcodesize(ex.st.pop()))
         elif o.op[0] == 'GAS':
             ex.st.push(f_gas(ex.pc, ex.cnt))
+        elif o.op[0] == 'TIMESTAMP':
+            ex.st.push(f_timestamp(ex.pc, ex.cnt))
         elif o.op[0] == 'RETURNDATASIZE':
             size: int = ex.ret.sort().size()
             assert size % 8 == 0
