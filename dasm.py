@@ -295,17 +295,26 @@ def call(ex: Exec, static: bool) -> None:
     ret_size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
 
     # push exit code
-    f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
-    exit_code = f_call(ex.pc, ex.cnt, gas, to, fund, simplify(wload(ex.st.memory, arg_loc, arg_size)))
+    if arg_size > 0:
+        f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
+        exit_code = f_call(ex.pc, ex.cnt, gas, to, fund, simplify(wload(ex.st.memory, arg_loc, arg_size)))
+    else:
+        assert arg_size == 0
+        f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256),                         BitVecSort(256))
+        exit_code = f_call(ex.pc, ex.cnt, gas, to, fund)
     ex.st.push(exit_code)
 
     # store return value
-    f_ret = Function('ret_'+str(ret_size*8), BitVecSort(256), BitVecSort(ret_size*8))
-    ret = f_ret(exit_code)
-    wstore(ex.st.memory, ret_loc, ret_size, ret)
-#   for i in range(ret_size):
-#       ex.st.memory[ret_loc + i] = simplify(Extract((ret_size - i)*8+7, (ret_size - i)*8, ret))
-    ex.ret = ret
+    if ret_size > 0:
+        f_ret = Function('ret_'+str(ret_size*8), BitVecSort(256), BitVecSort(ret_size*8))
+        ret = f_ret(exit_code)
+        wstore(ex.st.memory, ret_loc, ret_size, ret)
+#       for i in range(ret_size):
+#           ex.st.memory[ret_loc + i] = simplify(Extract((ret_size - i)*8+7, (ret_size - i)*8, ret))
+        ex.ret = ret
+    else:
+        assert ret_size == 0
+        ex.ret = None
 
 @log_call(include_args=[], include_result=False)
 def jumpi(ex: Exec, stack: List[Exec]) -> None:
@@ -340,9 +349,12 @@ def jumpi(ex: Exec, stack: List[Exec]) -> None:
 #           print("unsat: " + str(ex.sol))
 
 def returndatasize(ex: Exec) -> int:
-    size: int = ex.ret.sort().size()
-    assert size % 8 == 0
-    return int(size / 8)
+    if ex.ret is None:
+        return 0
+    else:
+        size: int = ex.ret.sort().size()
+        assert size % 8 == 0
+        return int(size / 8)
 
 def run(ex0: Exec) -> List[Exec]:
     out: List[Exec] = []
