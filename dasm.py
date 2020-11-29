@@ -6,8 +6,9 @@ from z3 import *
 from typing import List, Dict, Tuple, Any
 from byte2op import Opcode, decode
 
-#from eliot import to_file, log_call, start_action
-#to_file(open("out.log", "w"))
+from timeit import default_timer as timer
+from eliot import to_file, log_call, start_action
+to_file(open("out.log", "w"))
 
 Word = Any # z3 expression (including constants)
 Byte = Any # z3 expression (including constants)
@@ -303,8 +304,39 @@ def call(ex: Exec, static: bool) -> None:
     wstore(ex.st.memory, ret_loc, ret_size, ret)
 #   for i in range(ret_size):
 #       ex.st.memory[ret_loc + i] = simplify(Extract((ret_size - i)*8+7, (ret_size - i)*8, ret))
-
     ex.ret = ret
+
+@log_call(include_args=[], include_result=False)
+def jumpi(ex: Exec, stack: List[Exec]) -> None:
+    target: int = int(str(ex.st.pop())) # target must be concrete
+    cond: Word = ex.st.pop()
+
+    with start_action(action_type="z3 then branch"):
+        ex.sol.push()
+        #ex.sol.add(simplify(simp(cond != con(0))))
+        #ex.sol.add(cond != con(0))
+        ex.sol.add(simplify(is_non_zero(cond)))
+        if ex.sol.check() != unsat: # jump
+            with start_action(action_type="z3 clone"):
+                new_sol = Solver()
+                new_sol.add(ex.sol.assertions())
+                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.ret), deepcopy(ex.log), ex.cnt)
+            stack.append(new_ex)
+            if __debug__:
+                print('jump')
+#       else:
+#           print("unsat: " + str(ex.sol))
+        ex.sol.pop()
+
+    with start_action(action_type="z3 else branch"):
+        #ex.sol.add(simplify(simp(cond == con(0))))
+        #ex.sol.add(cond == con(0))
+        ex.sol.add(simplify(is_zero(cond)))
+        if ex.sol.check() != unsat:
+            ex.next_pc()
+            stack.append(ex)
+#       else:
+#           print("unsat: " + str(ex.sol))
 
 def run(ex0: Exec) -> List[Exec]:
     out: List[Exec] = []
@@ -333,36 +365,7 @@ def run(ex0: Exec) -> List[Exec]:
             continue
 
         elif o.op[0] == 'JUMPI':
-            target: int = int(str(ex.st.pop())) # target must be concrete
-            cond: Word = ex.st.pop()
-
-            #with start_action(action_type="check true branch"):
-            ex.sol.push()
-            #ex.sol.add(simplify(simp(cond != con(0))))
-            #ex.sol.add(cond != con(0))
-            ex.sol.add(simplify(is_non_zero(cond)))
-            if ex.sol.check() != unsat: # jump
-                #with start_action(action_type="state split"):
-                new_sol = Solver()
-                new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.ret), deepcopy(ex.log), ex.cnt)
-                stack.append(new_ex)
-                if __debug__:
-                    print('jump')
-#           else:
-#               print("unsat: " + str(ex.sol))
-            ex.sol.pop()
-
-            #with start_action(action_type="check else branch"):
-            #ex.sol.add(simplify(simp(cond == con(0))))
-            #ex.sol.add(cond == con(0))
-            ex.sol.add(simplify(is_zero(cond)))
-            if ex.sol.check() != unsat:
-                ex.next_pc()
-                stack.append(ex)
-#           else:
-#               print("unsat: " + str(ex.sol))
-
+            jumpi(ex, stack)
             continue
 
         elif o.op[0] == 'JUMP':
