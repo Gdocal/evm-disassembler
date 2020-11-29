@@ -223,6 +223,63 @@ def and_of(x: Word, y: Word) -> Word:
 def or_of(x: Word, y: Word) -> Word:
     return and_or(x, y, False)
 
+f_sdiv = Function('evm_sdiv', BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_smod = Function('evm_smod', BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_div  = Function('evm_div',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_mod  = Function('evm_mod',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_exp  = Function('evm_exp',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
+
+def is_power_of_two(x: int) -> bool:
+    if x > 0:
+        return not (x & (x - 1))
+    else:
+        return False
+
+def arith(op: str, w1: Word, w2: Word) -> Word:
+    if op == 'ADD':
+        return w1 + w2
+    elif op == 'MUL':
+        return w1 * w2
+    elif op == 'SUB':
+        return w1 - w2
+    elif op == 'SDIV':
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            return w1 / w2
+        else:
+            return f_sdiv(w1, w2)
+    elif op == 'SMOD':
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            return w1 % w2
+        else:
+            return f_smod(w1, w2)
+    elif op == 'DIV':
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            return UDiv(w1, w2)
+        elif w2.decl().name() == 'bv':
+            i2: int = int(str(w2)) # must be concrete
+            if i2 == 0:
+                return con(0)
+            elif is_power_of_two(i2):
+                return UDiv(w1, w2)
+            else:
+                return f_div(w1, w2)
+        else:
+            return f_div(w1, w2)
+    elif op == 'MOD':
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            return URem(w1, w2)
+        else:
+            return f_mod(w1, w2)
+    elif op == 'EXP':
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            i1: int = int(str(w1)) # must be concrete
+            i2: int = int(str(w2)) # must be concrete
+            return con(i1 ** i2)
+        else:
+            return f_exp(w1, w2)
+    else:
+        assert False
+
 def call(ex: Exec, static: bool) -> None:
     gas = ex.st.pop()
     to = ex.st.pop()
@@ -317,25 +374,31 @@ def run(ex0: Exec) -> List[Exec]:
         elif o.op[0] == 'JUMPDEST':
             pass
 
-        elif o.op[0] == 'ADD':
-            ex.st.push(ex.st.pop() + ex.st.pop())
-        elif o.op[0] == 'MUL':
-            ex.st.push(ex.st.pop() * ex.st.pop())
-        elif o.op[0] == 'SUB':
-            ex.st.push(ex.st.pop() - ex.st.pop())
-        elif o.op[0] == 'SDIV':
-            ex.st.push(ex.st.pop() / ex.st.pop())
-        elif o.op[0] == 'SMOD':
-            ex.st.push(ex.st.pop() % ex.st.pop())
-        elif o.op[0] == 'DIV':
-            ex.st.push(UDiv(ex.st.pop(), ex.st.pop()))
-        elif o.op[0] == 'MOD':
-            ex.st.push(URem(ex.st.pop(), ex.st.pop()))
+        elif int('01', 16) <= int(o.hx, 16) <= int('07', 16): # ADD MUL SUB DIV SDIV MOD SMOD
+            ex.st.push(arith(o.op[0], ex.st.pop(), ex.st.pop()))
 
         elif o.op[0] == 'EXP':
-            w1: int = int(str(ex.st.pop())) # must be concrete
-            w2: int = int(str(ex.st.pop())) # must be concrete
-            ex.st.push(con(w1 ** w2))
+            ex.st.push(arith(o.op[0], ex.st.pop(), ex.st.pop()))
+
+#       elif o.op[0] == 'ADD':
+#           ex.st.push(ex.st.pop() + ex.st.pop())
+#       elif o.op[0] == 'MUL':
+#           ex.st.push(ex.st.pop() * ex.st.pop())
+#       elif o.op[0] == 'SUB':
+#           ex.st.push(ex.st.pop() - ex.st.pop())
+#       elif o.op[0] == 'SDIV':
+#           ex.st.push(ex.st.pop() / ex.st.pop())
+#       elif o.op[0] == 'SMOD':
+#           ex.st.push(ex.st.pop() % ex.st.pop())
+#       elif o.op[0] == 'DIV':
+#           ex.st.push(UDiv(ex.st.pop(), ex.st.pop()))
+#       elif o.op[0] == 'MOD':
+#           ex.st.push(URem(ex.st.pop(), ex.st.pop()))
+
+#       elif o.op[0] == 'EXP':
+#           w1: int = int(str(ex.st.pop())) # must be concrete
+#           w2: int = int(str(ex.st.pop())) # must be concrete
+#           ex.st.push(con(w1 ** w2))
 
 #       elif o.op[0] == 'LT':
 #           ex.st.push(If(ULT(ex.st.pop(), ex.st.pop()), con(1), con(0)))
