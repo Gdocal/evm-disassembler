@@ -339,6 +339,11 @@ def jumpi(ex: Exec, stack: List[Exec]) -> None:
 #       else:
 #           print("unsat: " + str(ex.sol))
 
+def returndatasize(ex: Exec) -> int:
+    size: int = ex.ret.sort().size()
+    assert size % 8 == 0
+    return int(size / 8)
+
 def run(ex0: Exec) -> List[Exec]:
     out: List[Exec] = []
 
@@ -475,10 +480,6 @@ def run(ex0: Exec) -> List[Exec]:
             ex.st.push(f_gas(ex.pc, ex.cnt))
         elif o.op[0] == 'TIMESTAMP':
             ex.st.push(f_timestamp(ex.pc, ex.cnt))
-        elif o.op[0] == 'RETURNDATASIZE':
-            size: int = ex.ret.sort().size()
-            assert size % 8 == 0
-            ex.st.push(con(size / 8))
 
         elif o.op[0] == 'CALL':
             call(ex, False)
@@ -499,6 +500,18 @@ def run(ex0: Exec) -> List[Exec]:
             ex.st.push(Select(ex.storage, ex.st.pop()))
         elif o.op[0] == 'SSTORE':
             ex.storage = Store(ex.storage, ex.st.pop(), ex.st.pop())
+
+        elif o.op[0] == 'RETURNDATASIZE':
+            ex.st.push(con(returndatasize(ex)))
+        elif o.op[0] == 'RETURNDATACOPY':
+            loc: int = ex.st.mloc()
+            offset: int = int(str(ex.st.pop())) # offset must be concrete
+            size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
+            if size > 0:
+                datasize: int = returndatasize(ex)
+                assert datasize >= offset + size
+                data = Extract((datasize-1 - offset)*8+7, (datasize - offset - size)*8, ex.ret)
+                wstore(ex.st.memory, loc, size, data)
 
         elif o.op[0] == 'CODECOPY':
             loc: int = ex.st.mloc()
