@@ -6,6 +6,9 @@ from z3 import *
 from typing import List, Dict, Tuple, Any
 from byte2op import Opcode, decode
 
+#from eliot import to_file, log_call, start_action
+#to_file(open("out.log", "w"))
+
 Word = Any # z3 expression (including constants)
 Byte = Any # z3 expression (including constants)
 
@@ -257,6 +260,7 @@ def run(ex0: Exec) -> List[Exec]:
 
         o = ex.pgm[ex.pc]
 
+        #with start_action(action_type="run", op=o.op[0], pc=ex.pc):
         if o.op[0] == 'STOP':
             out.append(ex)
             continue
@@ -275,11 +279,13 @@ def run(ex0: Exec) -> List[Exec]:
             target: int = int(str(ex.st.pop())) # target must be concrete
             cond: Word = ex.st.pop()
 
+            #with start_action(action_type="check true branch"):
             ex.sol.push()
             #ex.sol.add(simplify(simp(cond != con(0))))
             #ex.sol.add(cond != con(0))
             ex.sol.add(simplify(is_non_zero(cond)))
             if ex.sol.check() != unsat: # jump
+                #with start_action(action_type="state split"):
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
                 new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.ret), deepcopy(ex.log), ex.cnt)
@@ -290,6 +296,7 @@ def run(ex0: Exec) -> List[Exec]:
 #               print("unsat: " + str(ex.sol))
             ex.sol.pop()
 
+            #with start_action(action_type="check else branch"):
             #ex.sol.add(simplify(simp(cond == con(0))))
             #ex.sol.add(cond == con(0))
             ex.sol.add(simplify(is_zero(cond)))
