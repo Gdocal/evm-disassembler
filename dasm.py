@@ -119,18 +119,18 @@ class Exec:
     pc: int
     sol: Solver
     storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
-    ret: Any
+    output: Any
     log: List[Tuple[List[Word], Any]]
     cnt: int
 
-    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, ret: Any, log: List[Tuple[List[Word], Any]], cnt: int) -> None:
+    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], cnt: int) -> None:
         self.pgm = pgm
         self.code = code
         self.st = st
         self.pc = pc
         self.sol = sol
         self.storage = storage
-        self.ret = ret
+        self.output = output
         self.log = log
         self.cnt = cnt
 
@@ -139,7 +139,7 @@ class Exec:
                str(self.st) + "\n" + \
                "storage: " + str(self.storage) + "\n" + \
                "path: " + str(self.sol) + "\n" + \
-               "output: " + str(self.ret) + "\n" + \
+               "output: " + str(self.output) + "\n" + \
                "log: " + str(self.log) + "\n"
 
     def next_pc(self) -> int:
@@ -311,10 +311,10 @@ def call(ex: Exec, static: bool) -> None:
         wstore(ex.st.memory, ret_loc, ret_size, ret)
 #       for i in range(ret_size):
 #           ex.st.memory[ret_loc + i] = simplify(Extract((ret_size - i)*8+7, (ret_size - i)*8, ret))
-        ex.ret = ret
+        ex.output = ret
     else:
         assert ret_size == 0
-        ex.ret = None
+        ex.output = None
 
 @log_call(include_args=[], include_result=False)
 def jumpi(ex: Exec, stack: List[Exec]) -> None:
@@ -330,7 +330,7 @@ def jumpi(ex: Exec, stack: List[Exec]) -> None:
             with start_action(action_type="z3 clone"):
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.ret), deepcopy(ex.log), ex.cnt)
+                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), ex.cnt)
             stack.append(new_ex)
             if __debug__:
                 print('jump')
@@ -349,10 +349,10 @@ def jumpi(ex: Exec, stack: List[Exec]) -> None:
 #           print("unsat: " + str(ex.sol))
 
 def returndatasize(ex: Exec) -> int:
-    if ex.ret is None:
+    if ex.output is None:
         return 0
     else:
-        size: int = ex.ret.sort().size()
+        size: int = ex.output.sort().size()
         assert size % 8 == 0
         return int(size / 8)
 
@@ -373,12 +373,12 @@ def run(ex0: Exec) -> List[Exec]:
             continue
 
         elif o.op[0] == 'REVERT':
-            ex.ret = ex.st.ret()
+            ex.output = ex.st.ret()
             out.append(ex)
             continue
 
         elif o.op[0] == 'RETURN':
-            ex.ret = ex.st.ret()
+            ex.output = ex.st.ret()
             out.append(ex)
             continue
 
@@ -522,7 +522,7 @@ def run(ex0: Exec) -> List[Exec]:
             if size > 0:
                 datasize: int = returndatasize(ex)
                 assert datasize >= offset + size
-                data = Extract((datasize-1 - offset)*8+7, (datasize - offset - size)*8, ex.ret)
+                data = Extract((datasize-1 - offset)*8+7, (datasize - offset - size)*8, ex.output)
                 wstore(ex.st.memory, loc, size, data)
 
         elif o.op[0] == 'CODECOPY':
@@ -567,9 +567,9 @@ def run(ex0: Exec) -> List[Exec]:
     return out
 
 @log_call(include_args=[], include_result=False)
-def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), ret: Any = None, log = [], cnt: int = 0) -> List[Exec]:
+def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], cnt: int = 0) -> List[Exec]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, ret, log, cnt)
+    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, cnt)
     return run(ex)
 
 if __name__ == '__main__':
