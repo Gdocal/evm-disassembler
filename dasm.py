@@ -36,8 +36,18 @@ class State:
         return st
 
     def __str__(self) -> str:
-        return "stack:  " + str(self.stack) + "\n" + \
-               "memory: " + str(self.memory)
+        return "stack:  " + str(self.stack) + \
+               self.str_memory()
+               # "memory: " + str(self.memory)
+
+    def str_memory(self) -> str:
+        idx: int = 0
+        ret: str = ""
+        size: int = len(self.memory)
+        while idx < size:
+            ret = ret + "\n" + "memory[" + str(idx) + "]: " + str(self.memory[idx:min(idx+32,size)])
+            idx = idx + 32
+        return ret
 
     def push(self, v: Word) -> None:
         assert eq(v.sort(), BitVecSort(256)) or eq(v.sort(), BoolSort())
