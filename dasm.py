@@ -132,6 +132,7 @@ class Exec:
     storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
     output: Any
     log: List[Tuple[List[Word], Any]]
+    # TODO: replace by step_id, fix cnt not incremented
     cnt: int
 
     def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], cnt: int) -> None:
