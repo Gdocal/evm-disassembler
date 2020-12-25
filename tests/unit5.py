@@ -8,6 +8,6 @@ hexcode = '6080604052600436106100b15760003560e01c80638456cb5911610069578063c8265
 
 sol = Solver()
 sol.add(Extract(255, 224, f_calldataload(con(0))) == 0xc82655b7)
-exs = dasm(ops, code, sol)
+(exs, _) = dasm(ops, code, sol)
 for ex in exs:
     print(ex)

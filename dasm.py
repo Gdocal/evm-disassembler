@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 
 import sys
+import json
 from copy import deepcopy
 from z3 import *
 from typing import List, Dict, Tuple, Any
@@ -327,7 +328,7 @@ def call(ex: Exec, static: bool) -> None:
         ex.output = None
 
 @log_call(include_args=[], include_result=False)
-def jumpi(ex: Exec, stack: List[Exec]) -> None:
+def jumpi(ex: Exec, stack: List[Exec], step_id: int) -> None:
     target: int = int(str(ex.st.pop())) # target must be concrete
     cond: Word = ex.st.pop()
 
@@ -341,7 +342,7 @@ def jumpi(ex: Exec, stack: List[Exec]) -> None:
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
                 new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), ex.cnt)
-            stack.append(new_ex)
+            stack.append((new_ex, step_id))
             if __debug__:
                 print('jump')
 #       else:
@@ -354,7 +355,7 @@ def jumpi(ex: Exec, stack: List[Exec]) -> None:
         ex.sol.add(simplify(is_zero(cond)))
         if ex.sol.check() != unsat:
             ex.next_pc()
-            stack.append(ex)
+            stack.append((ex, step_id))
 #       else:
 #           print("unsat: " + str(ex.sol))
 
@@ -366,14 +367,21 @@ def returndatasize(ex: Exec) -> int:
         assert size % 8 == 0
         return int(size / 8)
 
-def run(ex0: Exec) -> List[Exec]:
-    out: List[Exec] = []
+Steps = Dict[int,Dict[str,Any]]
 
-    stack: List[Exec] = [ex0]
+def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
+    out: List[Exec] = []
+    steps: Steps = {}
+    step_id: int = 0
+
+    stack: List[Tuple[Exec,int]] = [(ex0, 0)]
     while stack:
-        ex = stack.pop()
+        (ex, prev_step_id) = stack.pop()
+        step_id += 1
+
         if __debug__:
-            print(ex)
+            steps[step_id] = {'parent': prev_step_id, 'exec': str(ex)}
+#           print(ex)
 
         o = ex.pgm[ex.pc]
 
@@ -393,13 +401,13 @@ def run(ex0: Exec) -> List[Exec]:
             continue
 
         elif o.op[0] == 'JUMPI':
-            jumpi(ex, stack)
+            jumpi(ex, stack, step_id)
             continue
 
         elif o.op[0] == 'JUMP':
             target: int = int(str(ex.st.pop())) # target must be concrete
             ex.pc = target
-            stack.append(ex)
+            stack.append((ex, step_id))
             continue
 
         elif o.op[0] == 'JUMPDEST':
@@ -572,12 +580,12 @@ def run(ex0: Exec) -> List[Exec]:
             continue
 
         ex.next_pc()
-        stack.append(ex)
+        stack.append((ex, step_id))
 
-    return out
+    return (out, steps)
 
 @log_call(include_args=[], include_result=False)
-def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], cnt: int = 0) -> List[Exec]:
+def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], cnt: int = 0) -> Tuple[List[Exec], Steps]:
     st = State()
     ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, cnt)
     return run(ex)

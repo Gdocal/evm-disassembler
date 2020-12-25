@@ -17,6 +17,8 @@ funsig = 0x01ba793b # updateRewardCheckpoint(address)
 # calldata
 sol.add(Extract(255, 224, f_calldataload(con(0))) == funsig) 
 
-exs = dasm(ops, code, sol, storage)
+(exs, steps) = dasm(ops, code, sol, storage)
 for ex in exs:
     print(ex)
+with open('out.json', 'w') as json_file:
+    json.dump(steps, json_file)

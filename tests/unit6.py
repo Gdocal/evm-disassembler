@@ -32,6 +32,6 @@ sol.add(ULT(sha3_256(con(0)), con(1000)))
 # original data size
 sol.add(Select(storage, con(0)) == con(4))
 
-exs = dasm(ops, code, sol, storage)
+(exs, _) = dasm(ops, code, sol, storage)
 for ex in exs:
     print(ex)

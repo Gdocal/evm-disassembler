@@ -6,7 +6,7 @@ hexcode = '608060405260043610603f576000357c0100000000000000000000000000000000000
 
 (ops, code) = decode(hexcode)
 
-exs = dasm(ops, code)
+(exs, _) = dasm(ops, code)
 for ex in exs:
     print(ex)
 #   print(ex.pc)
