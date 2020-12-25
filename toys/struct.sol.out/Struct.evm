@@ -1,0 +1,394 @@
+    /* "struct.sol":64:678  contract Struct {... */
+  mstore(0x40, 0x80)
+  callvalue
+  dup1
+  iszero
+  tag_1
+  jumpi
+  0x00
+  dup1
+  revert
+tag_1:
+  pop
+  dataSize(sub_0)
+  dup1
+  dataOffset(sub_0)
+  0x00
+  codecopy
+  0x00
+  return
+stop
+
+sub_0: assembly {
+        /* "struct.sol":64:678  contract Struct {... */
+      mstore(0x40, 0x80)
+      callvalue
+      dup1
+      iszero
+      tag_1
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_1:
+      pop
+      jumpi(tag_2, lt(calldatasize, 0x04))
+      shr(0xe0, calldataload(0x00))
+      dup1
+      0x01ba793b
+      eq
+      tag_3
+      jumpi
+      dup1
+      0x1d62ebd9
+      eq
+      tag_4
+      jumpi
+      dup1
+      0xcd3daf9d
+      eq
+      tag_5
+      jumpi
+      dup1
+      0xdbb51d6e
+      eq
+      tag_6
+      jumpi
+    tag_2:
+      0x00
+      dup1
+      revert
+        /* "struct.sol":266:444  function updateRewardCheckpoint(address account) external {... */
+    tag_3:
+      tag_7
+      0x04
+      dup1
+      calldatasize
+      sub
+      0x20
+      dup2
+      lt
+      iszero
+      tag_8
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_8:
+      pop
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      tag_9
+      jump	// in
+    tag_7:
+      stop
+        /* "struct.sol":450:675  function rewardOf(address account) public view returns (uint128) {... */
+    tag_4:
+      tag_10
+      0x04
+      dup1
+      calldatasize
+      sub
+      0x20
+      dup2
+      lt
+      iszero
+      tag_11
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_11:
+      pop
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      tag_12
+      jump	// in
+    tag_10:
+      0x40
+      dup1
+      mload
+      0xffffffffffffffffffffffffffffffff
+      swap1
+      swap3
+      and
+      dup3
+      mstore
+      mload
+      swap1
+      dup2
+      swap1
+      sub
+      0x20
+      add
+      swap1
+      return
+        /* "struct.sol":230:259  uint128 public rewardPerToken */
+    tag_5:
+      tag_10
+      tag_14
+      jump	// in
+        /* "struct.sol":174:223  mapping(address => Checkpoint) public checkpoints */
+    tag_6:
+      tag_15
+      0x04
+      dup1
+      calldatasize
+      sub
+      0x20
+      dup2
+      lt
+      iszero
+      tag_16
+      jumpi
+      0x00
+      dup1
+      revert
+    tag_16:
+      pop
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      tag_17
+      jump	// in
+    tag_15:
+      mload(0x40)
+      dup1
+      dup4
+      0xffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      dup3
+      0xffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap3
+      pop
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "struct.sol":266:444  function updateRewardCheckpoint(address account) external {... */
+    tag_9:
+        /* "struct.sol":334:354  Checkpoint memory cp */
+      tag_19
+      tag_20
+      jump	// in
+    tag_19:
+        /* "struct.sol":357:402  Checkpoint(rewardPerToken, rewardOf(account)) */
+      0x40
+      dup1
+      mload
+      dup1
+      dup3
+      add
+      swap1
+      swap2
+      mstore
+        /* "struct.sol":368:382  rewardPerToken */
+      and(0xffffffffffffffffffffffffffffffff, sload(0x01))
+        /* "struct.sol":357:402  Checkpoint(rewardPerToken, rewardOf(account)) */
+      dup2
+      mstore
+      0x20
+      dup2
+      add
+        /* "struct.sol":384:401  rewardOf(account) */
+      tag_21
+        /* "struct.sol":393:400  account */
+      dup5
+        /* "struct.sol":384:392  rewardOf */
+      tag_12
+        /* "struct.sol":384:401  rewardOf(account) */
+      jump	// in
+    tag_21:
+        /* "struct.sol":357:402  Checkpoint(rewardPerToken, rewardOf(account)) */
+      0xffffffffffffffffffffffffffffffff
+      swap1
+      dup2
+      and
+      swap1
+      swap2
+      mstore
+        /* "struct.sol":412:432  checkpoints[account] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      swap1
+      swap4
+      and
+        /* "struct.sol":412:423  checkpoints */
+      0x00
+        /* "struct.sol":412:432  checkpoints[account] */
+      swap1
+      dup2
+      mstore
+      0x20
+      dup2
+      dup2
+      mstore
+      0x40
+      swap1
+      swap2
+      keccak256
+        /* "struct.sol":412:437  checkpoints[account] = cp */
+      dup3
+      mload
+      dup2
+      sload
+      swap3
+      swap1
+      swap4
+      add
+      mload
+      dup6
+      and
+      0x0100000000000000000000000000000000
+      mul
+      swap3
+      dup6
+      and
+      0xffffffffffffffffffffffffffffffff00000000000000000000000000000000
+      swap1
+      swap3
+      and
+      swap2
+      swap1
+      swap2
+      or
+      swap1
+      swap4
+      and
+      or
+      swap1
+      swap2
+      sstore
+      pop
+        /* "struct.sol":266:444  function updateRewardCheckpoint(address account) external {... */
+      jump	// out
+        /* "struct.sol":450:675  function rewardOf(address account) public view returns (uint128) {... */
+    tag_12:
+        /* "struct.sol":506:513  uint128 */
+      0x00
+        /* "struct.sol":525:545  Checkpoint memory cp */
+      tag_23
+      tag_20
+      jump	// in
+    tag_23:
+      pop
+      pop
+        /* "struct.sol":548:568  checkpoints[account] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+        /* "struct.sol":548:559  checkpoints */
+      0x00
+        /* "struct.sol":548:568  checkpoints[account] */
+      swap1
+      dup2
+      mstore
+      0x20
+      dup2
+      dup2
+      mstore
+      0x40
+      swap2
+      dup3
+      swap1
+      keccak256
+        /* "struct.sol":525:568  Checkpoint memory cp = checkpoints[account] */
+      dup3
+      mload
+      dup1
+      dup5
+      add
+      swap1
+      swap4
+      mstore
+      sload
+      0xffffffffffffffffffffffffffffffff
+      dup1
+      dup3
+      and
+      dup1
+      dup6
+      mstore
+      0x0100000000000000000000000000000000
+      swap1
+      swap3
+      div
+      and
+      swap3
+      swap1
+      swap2
+      add
+      dup3
+      swap1
+      mstore
+        /* "struct.sol":639:668  cp.reward + cp.rewardPerToken */
+      add
+      swap1
+        /* "struct.sol":450:675  function rewardOf(address account) public view returns (uint128) {... */
+      jump	// out
+        /* "struct.sol":230:259  uint128 public rewardPerToken */
+    tag_14:
+      and(0xffffffffffffffffffffffffffffffff, sload(0x01))
+      dup2
+      jump	// out
+        /* "struct.sol":174:223  mapping(address => Checkpoint) public checkpoints */
+    tag_17:
+      0x00
+      0x20
+      dup2
+      swap1
+      mstore
+      swap1
+      dup2
+      mstore
+      0x40
+      swap1
+      keccak256
+      sload
+      0xffffffffffffffffffffffffffffffff
+      dup1
+      dup3
+      and
+      swap2
+      0x0100000000000000000000000000000000
+      swap1
+      div
+      and
+      dup3
+      jump	// out
+    tag_20:
+      0x40
+      dup1
+      mload
+      dup1
+      dup3
+      add
+      swap1
+      swap2
+      mstore
+      0x00
+      dup1
+      dup3
+      mstore
+      0x20
+      dup3
+      add
+      mstore
+      swap1
+      jump	// out
+
+    auxdata: 0xa2646970667358221220bd15d08d59e474ef5cf35f1527d2b993eb8be8f1848fb9fd70501dd92128794264736f6c63430007050033
+}
