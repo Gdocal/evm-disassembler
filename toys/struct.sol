@@ -15,6 +15,10 @@ contract Struct {
 
     function updateRewardCheckpoint(address account) external {
         checkpoints[account] = Checkpoint(rewardPerToken, rewardOf(account));
+        /*
+        Checkpoint memory cp = Checkpoint(rewardPerToken, rewardOf(account));
+        checkpoints[account] = cp;
+        */
     }
 
     function rewardOf(address account) public view returns (uint128) {

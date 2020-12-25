@@ -1,4 +1,4 @@
-    /* "struct.sol":64:678  contract Struct {... */
+    /* "struct.sol":64:724  contract Struct {... */
   mstore(0x40, 0x80)
   callvalue
   dup1
@@ -20,7 +20,7 @@ tag_1:
 stop
 
 sub_0: assembly {
-        /* "struct.sol":64:678  contract Struct {... */
+        /* "struct.sol":64:724  contract Struct {... */
       mstore(0x40, 0x80)
       callvalue
       dup1
@@ -58,7 +58,7 @@ sub_0: assembly {
       0x00
       dup1
       revert
-        /* "struct.sol":266:444  function updateRewardCheckpoint(address account) external {... */
+        /* "struct.sol":266:544  function updateRewardCheckpoint(address account) external {... */
     tag_3:
       tag_7
       0x04
@@ -83,7 +83,7 @@ sub_0: assembly {
       jump	// in
     tag_7:
       stop
-        /* "struct.sol":450:675  function rewardOf(address account) public view returns (uint128) {... */
+        /* "struct.sol":550:721  function rewardOf(address account) public view returns (uint128) {... */
     tag_4:
       tag_10
       0x04
@@ -180,13 +180,8 @@ sub_0: assembly {
       sub
       swap1
       return
-        /* "struct.sol":266:444  function updateRewardCheckpoint(address account) external {... */
+        /* "struct.sol":266:544  function updateRewardCheckpoint(address account) external {... */
     tag_9:
-        /* "struct.sol":334:354  Checkpoint memory cp */
-      tag_19
-      tag_20
-      jump	// in
-    tag_19:
         /* "struct.sol":357:402  Checkpoint(rewardPerToken, rewardOf(account)) */
       0x40
       dup1
@@ -206,14 +201,14 @@ sub_0: assembly {
       dup2
       add
         /* "struct.sol":384:401  rewardOf(account) */
-      tag_21
+      tag_19
         /* "struct.sol":393:400  account */
-      dup5
+      dup4
         /* "struct.sol":384:392  rewardOf */
       tag_12
         /* "struct.sol":384:401  rewardOf(account) */
       jump	// in
-    tag_21:
+    tag_19:
         /* "struct.sol":357:402  Checkpoint(rewardPerToken, rewardOf(account)) */
       0xffffffffffffffffffffffffffffffff
       swap1
@@ -222,14 +217,14 @@ sub_0: assembly {
       swap1
       swap2
       mstore
-        /* "struct.sol":412:432  checkpoints[account] */
+        /* "struct.sol":334:354  checkpoints[account] */
       0xffffffffffffffffffffffffffffffffffffffff
       swap1
-      swap4
+      swap3
       and
-        /* "struct.sol":412:423  checkpoints */
+        /* "struct.sol":334:345  checkpoints */
       0x00
-        /* "struct.sol":412:432  checkpoints[account] */
+        /* "struct.sol":334:354  checkpoints[account] */
       swap1
       dup2
       mstore
@@ -241,25 +236,32 @@ sub_0: assembly {
       swap1
       swap2
       keccak256
-        /* "struct.sol":412:437  checkpoints[account] = cp */
+        /* "struct.sol":334:402  checkpoints[account] = Checkpoint(rewardPerToken, rewardOf(account)) */
       dup3
       mload
       dup2
       sload
-      swap3
-      swap1
       swap4
+      swap1
+      swap3
       add
       mload
-      dup6
+      dup5
       and
       0x0100000000000000000000000000000000
       mul
-      swap3
-      dup6
+      swap2
+      dup5
       and
       0xffffffffffffffffffffffffffffffff00000000000000000000000000000000
       swap1
+      swap4
+      and
+      swap3
+      swap1
+      swap3
+      or
+      swap1
       swap3
       and
       swap2
@@ -267,32 +269,26 @@ sub_0: assembly {
       swap2
       or
       swap1
-      swap4
-      and
-      or
-      swap1
-      swap2
       sstore
-      pop
-        /* "struct.sol":266:444  function updateRewardCheckpoint(address account) external {... */
+        /* "struct.sol":266:544  function updateRewardCheckpoint(address account) external {... */
       jump	// out
-        /* "struct.sol":450:675  function rewardOf(address account) public view returns (uint128) {... */
+        /* "struct.sol":550:721  function rewardOf(address account) public view returns (uint128) {... */
     tag_12:
-        /* "struct.sol":506:513  uint128 */
+        /* "struct.sol":606:613  uint128 */
       0x00
-        /* "struct.sol":525:545  Checkpoint memory cp */
-      tag_23
-      tag_20
+        /* "struct.sol":625:645  Checkpoint memory cp */
+      tag_21
+      tag_22
       jump	// in
-    tag_23:
+    tag_21:
       pop
       pop
-        /* "struct.sol":548:568  checkpoints[account] */
+        /* "struct.sol":648:668  checkpoints[account] */
       0xffffffffffffffffffffffffffffffffffffffff
       and
-        /* "struct.sol":548:559  checkpoints */
+        /* "struct.sol":648:659  checkpoints */
       0x00
-        /* "struct.sol":548:568  checkpoints[account] */
+        /* "struct.sol":648:668  checkpoints[account] */
       swap1
       dup2
       mstore
@@ -305,7 +301,7 @@ sub_0: assembly {
       dup3
       swap1
       keccak256
-        /* "struct.sol":525:568  Checkpoint memory cp = checkpoints[account] */
+        /* "struct.sol":625:668  Checkpoint memory cp = checkpoints[account] */
       dup3
       mload
       dup1
@@ -334,10 +330,10 @@ sub_0: assembly {
       dup3
       swap1
       mstore
-        /* "struct.sol":639:668  cp.reward + cp.rewardPerToken */
+        /* "struct.sol":685:714  cp.reward + cp.rewardPerToken */
       add
       swap1
-        /* "struct.sol":450:675  function rewardOf(address account) public view returns (uint128) {... */
+        /* "struct.sol":550:721  function rewardOf(address account) public view returns (uint128) {... */
       jump	// out
         /* "struct.sol":230:259  uint128 public rewardPerToken */
     tag_14:
@@ -369,7 +365,7 @@ sub_0: assembly {
       and
       dup3
       jump	// out
-    tag_20:
+    tag_22:
       0x40
       dup1
       mload
@@ -390,5 +386,5 @@ sub_0: assembly {
       swap1
       jump	// out
 
-    auxdata: 0xa2646970667358221220bd15d08d59e474ef5cf35f1527d2b993eb8be8f1848fb9fd70501dd92128794264736f6c63430007050033
+    auxdata: 0xa2646970667358221220060db26806360bf40cfeb12a8d297865e99fef6cc1ccfa2a729b8f9a422d423664736f6c63430007050033
 }
