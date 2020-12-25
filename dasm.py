@@ -343,8 +343,8 @@ def jumpi(ex: Exec, stack: List[Exec], step_id: int) -> None:
                 new_sol.add(ex.sol.assertions())
                 new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), ex.cnt)
             stack.append((new_ex, step_id))
-            if __debug__:
-                print('jump')
+#           if __debug__:
+#               print('jump')
 #       else:
 #           print("unsat: " + str(ex.sol))
         ex.sol.pop()
