@@ -12,6 +12,8 @@ from timeit import default_timer as timer
 from eliot import to_file, log_call, start_action
 to_file(open("out.log", "w"))
 
+set_option(timeout=500)
+
 Word = Any # z3 expression (including constants)
 Byte = Any # z3 expression (including constants)
 
