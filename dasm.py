@@ -2,6 +2,7 @@
 
 import sys
 import json
+import math
 from copy import deepcopy
 from z3 import *
 from typing import List, Dict, Tuple, Any
@@ -242,6 +243,9 @@ f_smod = Function('evm_smod', BitVecSort(256), BitVecSort(256), BitVecSort(256))
 f_div  = Function('evm_div',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
 f_mod  = Function('evm_mod',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
 f_exp  = Function('evm_exp',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_add  = Function('evm_add',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_sub  = Function('evm_sub',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_mul  = Function('evm_mul',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
 
 def is_power_of_two(x: int) -> bool:
     if x > 0:
@@ -251,11 +255,36 @@ def is_power_of_two(x: int) -> bool:
 
 def arith(op: str, w1: Word, w2: Word) -> Word:
     if op == 'ADD':
-        return w1 + w2
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            return w1 + w2
+        else:
+            return f_add(w1, w2)
     elif op == 'MUL':
-        return w1 * w2
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            return w1 * w2
+        elif w1.decl().name() == 'bv':
+            i1: int = int(str(w1)) # must be concrete
+            if i1 == 0:
+                return con(0)
+            elif is_power_of_two(i1):
+                return w2 << int(math.log(i1,2))
+            else:
+                return f_mul(w1, w2)
+        elif w2.decl().name() == 'bv':
+            i2: int = int(str(w2)) # must be concrete
+            if i2 == 0:
+                return con(0)
+            elif is_power_of_two(i2):
+                return w1 << int(math.log(i2,2))
+            else:
+                return f_mul(w1, w2)
+        else:
+            return f_mul(w1, w2)
     elif op == 'SUB':
-        return w1 - w2
+        if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
+            return w1 - w2
+        else:
+            return f_sub(w1, w2)
     elif op == 'SDIV':
         if w1.decl().name() == 'bv' and w2.decl().name() == 'bv':
             return w1 / w2
