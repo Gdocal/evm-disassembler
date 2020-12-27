@@ -13,6 +13,7 @@ from eliot import to_file, log_call, start_action
 to_file(open("out.log", "w"))
 
 set_option(timeout=500)
+set_option(max_width=240)
 
 Word = Any # z3 expression (including constants)
 Byte = Any # z3 expression (including constants)
@@ -40,9 +41,13 @@ class State:
         return st
 
     def __str__(self) -> str:
-        return "stack:  " + str(self.stack) + \
-               self.str_memory()
-               # "memory: " + str(self.memory)
+        return ''.join([
+            "stack:  ", str(self.stack),
+#           self.str_memory(),
+            ])
+#       return "stack:  " + str(self.stack) + \
+#              self.str_memory()
+#              # "memory: " + str(self.memory)
 
     def str_memory(self) -> str:
         idx: int = 0
@@ -149,13 +154,30 @@ class Exec:
         self.log = log
         self.cnt = cnt
 
+    def summary(self) -> str:
+        return ''.join([
+            str(self.pc), ' ', str(self.pgm[self.pc].op[0]), "\n",
+            "stack3:  ", str(self.st.stack[0:3]), "\n",
+            "storage: ", str(self.storage), "\n",
+            "output: " , str(self.output) , "\n",
+            "log: "    , str(self.log)    , "\n",
+            ])
+
     def __str__(self) -> str:
-        return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
-               str(self.st) + "\n" + \
-               "storage: " + str(self.storage) + "\n" + \
-               "path: " + str(self.sol) + "\n" + \
-               "output: " + str(self.output) + "\n" + \
-               "log: " + str(self.log) + "\n"
+        return ''.join([
+            str(self.pc), ' ', str(self.pgm[self.pc].op[0]), "\n",
+            str(self.st), "\n",
+            "storage: ", str(self.storage), "\n",
+            "path: "   , str(self.sol)    , "\n",
+            "output: " , str(self.output) , "\n",
+            "log: "    , str(self.log)    , "\n",
+            ])
+#       return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
+#              str(self.st) + "\n" + \
+#              "storage: " + str(self.storage) + "\n" + \
+#              "path: " + str(self.sol) + "\n" + \
+#              "output: " + str(self.output) + "\n" + \
+#              "log: " + str(self.log) + "\n"
 
     def next_pc(self) -> int:
         self.cnt += 1
@@ -411,11 +433,14 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         (ex, prev_step_id) = stack.pop()
         step_id += 1
 
-        if __debug__:
-            steps[step_id] = {'parent': prev_step_id, 'exec': str(ex)}
-#           print(ex)
-
         o = ex.pgm[ex.pc]
+
+        if __debug__:
+            if o.op[0] == 'JUMPI':
+                steps[step_id] = {'parent': prev_step_id, 'exec': str(ex)}
+            else:
+                steps[step_id] = {'parent': prev_step_id, 'exec': ex.summary()}
+#           print(ex)
 
         #with start_action(action_type="run", op=o.op[0], pc=ex.pc):
         if o.op[0] == 'STOP':
