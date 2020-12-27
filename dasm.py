@@ -604,6 +604,8 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
             loc: int = ex.st.mloc()
             pc: int = int(str(ex.st.pop())) # pc must be concrete
             size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
+            while len(ex.st.memory) < loc + size:
+                ex.st.memory.extend([BitVecVal(0, 8) for _ in range(32)])
             for i in range(size):
                 ex.st.memory[loc + i] = BitVecVal(int(ex.code[pc + i], 16), 8)
 
