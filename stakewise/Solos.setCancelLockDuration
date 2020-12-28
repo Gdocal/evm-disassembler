@@ -1,0 +1,65 @@
+1102 REVERT
+stack:  [callvalue, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 2979218348,
+ ULE(4, calldatasize),
+ ULE(1883767413, Extract(255, 224, calldataload(0))),
+ ULE(2979218348, Extract(255, 224, calldataload(0))),
+ Not(ULE(3578229791, Extract(255, 224, calldataload(0)))),
+ Extract(255, 224, calldataload(0)) == 2979218348,
+ Not(callvalue == 0)]
+output: None
+log: []
+
+6817 REVERT
+stack:  [0, 4, calldatasize, 1118, 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 2979218348,
+ ULE(4, calldatasize),
+ ULE(1883767413, Extract(255, 224, calldataload(0))),
+ ULE(2979218348, Extract(255, 224, calldataload(0))),
+ Not(ULE(3578229791, Extract(255, 224, calldataload(0)))),
+ Extract(255, 224, calldataload(0)) == 2979218348,
+ callvalue == 0,
+ Not(32 <= evm_sub(calldatasize, 4))]
+output: None
+log: []
+
+3337 REVERT
+stack:  [calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 2979218348,
+ ULE(4, calldatasize),
+ ULE(1883767413, Extract(255, 224, calldataload(0))),
+ ULE(2979218348, Extract(255, 224, calldataload(0))),
+ Not(ULE(3578229791, Extract(255, 224, calldataload(0)))),
+ Extract(255, 224, calldataload(0)) == 2979218348,
+ callvalue == 0,
+ 32 <= evm_sub(calldatasize, 4),
+ storage[sha3_512(Concat(0, Extract(159, 0, caller), evm_add(1, sha3_512(2))))] == 0]
+output: 6153991365495612155900636027672374423590526649800347271880663691463480803109403913816294060733134321992250056305029703065083882690465907441524573253073635884337764998758143820872865866533141525949933386987544390623733363298873245474388459881474347802359025316300884409456489216564089264063810390853907644416
+log: []
+
+520 STOP
+stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(storage, 6, calldataload(4))
+path: [Extract(255, 224, calldataload(0)) == 2979218348,
+ ULE(4, calldatasize),
+ ULE(1883767413, Extract(255, 224, calldataload(0))),
+ ULE(2979218348, Extract(255, 224, calldataload(0))),
+ Not(ULE(3578229791, Extract(255, 224, calldataload(0)))),
+ Extract(255, 224, calldataload(0)) == 2979218348,
+ callvalue == 0,
+ 32 <= evm_sub(calldatasize, 4),
+ Not(storage[sha3_512(Concat(0, Extract(159, 0, caller), evm_add(1, sha3_512(2))))] == 0)]
+output: None
+log: [([17369022215684516318493263565220204478621964883201321319721393423224687987428], calldataload(4))]
+
+443 REVERT
+stack:  []
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 2979218348, Not(ULE(4, calldatasize))]
+output: None
+log: []
+
+Total time (seconds): 0.19

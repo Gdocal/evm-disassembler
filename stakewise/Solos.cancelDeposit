@@ -1,0 +1,295 @@
+713 REVERT
+stack:  [callvalue, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ Not(callvalue == 0)]
+output: None
+log: []
+
+6885 REVERT
+stack:  [0, 0, 4, calldatasize, 729, 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ Not(64 <= evm_sub(calldatasize, 4))]
+output: None
+log: []
+
+2271 REVERT
+stack:  [calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ storage[0] == 2]
+output: 228264226241736076789315253437788395295290655968864242154051220442876821475138452412609791604325387667538211856168962205768445946871806458521150950280164845310867190806335837871906352864592348167472868559612024351186820979422152636498734080
+log: []
+
+1542 REVERT
+stack:  [sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(storage, 0, 2)
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ Not(ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp))]
+output: 26431191654670037041093285164452199151988162856308936462170270969610284427678704919895385542767849696531847557284261174973126235652251563464311074502307597603042846757721897040626273569571126247818868076381814437369948716857791020461533580542037054834635791493915186696278103634915530302165861884810565933581706723328
+log: []
+
+5295 REVERT
+stack:  [0, 232, calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], 2501, 0, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(storage, 0, 2)
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ Not(ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))])),
+ True,
+ True,
+ True]
+output: 228264226241736076789315253437788395295290655968864242154051220442876821475138452412609791604325387667538211856168962205768445946871806458521150950280164845310866728108008546894095253786683422095779719551578965766378239855011206892250726400
+log: []
+
+1542 REVERT
+stack:  [evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(storage, 0, 2)
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))]),
+ True,
+ True,
+ Not(evm_mod(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), 32000000000000000000) == 0)]
+output: 228264226241736076789315253437788395295290655968864242154051220442876821475138452412609791604325387667538211856168962205768445946871806458521150950280164845310866843900097784210290677357948299595236246761292112510790605783249703758743994368
+log: []
+
+5414 REVERT
+stack:  [calldataload(36), caller, 2704, evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(Store(Store(storage, 0, 2),
+            sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)),
+            evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36))),
+      evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2),
+      evm_add(timestamp,
+              Store(Store(storage, 0, 2),
+                    sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)),
+                    evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)))[6]))
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))]),
+ True,
+ True,
+ evm_mod(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), 32000000000000000000) == 0,
+ Not(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)) == 0),
+ Not(ULE(calldataload(36), selfbalance(5306, 341)))]
+output: 228264226241736076789315253437788395295290655968864242154051220442876821475138452412609791604325387667538211856168962205768445946871806458521150950280164845310866951531065294773403995027425850203416785408242747003061194699846996223112249344
+log: [([65622309289720611750453557674028511773342571987050230476218759540884465526289, sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4)))], Concat(0, Extract(159, 0, caller), calldataload(36), Store(storage, 0, 2)[evm_add(1, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)))]))]
+
+5597 REVERT
+stack:  [call_0(5455, 363, gas(5454, 362), Concat(0, Extract(159, 0, caller)), calldataload(36)), calldataload(36), caller, 2704, evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(Store(Store(storage, 0, 2),
+            sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)),
+            evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36))),
+      evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2),
+      evm_add(timestamp,
+              Store(Store(storage, 0, 2),
+                    sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)),
+                    evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)))[6]))
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))]),
+ True,
+ True,
+ evm_mod(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), 32000000000000000000) == 0,
+ Not(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)) == 0),
+ ULE(calldataload(36), selfbalance(5306, 341)),
+ True,
+ call_0(5455, 363, gas(5454, 362), Concat(0, Extract(159, 0, caller)), calldataload(36)) == 0]
+output: 26431191654670037041093285164452199151988162856308936462170270969610284427678704919895385542767849696531847557284261174973126235652251563464311074502307597603043060337655440861386948282765364148280431993403418729217642410397712207955831510455046051672988737411558784881357736376873544250988290238662046451780311580672
+log: [([65622309289720611750453557674028511773342571987050230476218759540884465526289, sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4)))], Concat(0, Extract(159, 0, caller), calldataload(36), Store(storage, 0, 2)[evm_add(1, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)))]))]
+
+520 STOP
+stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(Store(Store(Store(storage, 0, 2),
+                  sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)),
+                  evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36))),
+            evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2),
+            evm_add(timestamp,
+                    Store(Store(storage, 0, 2),
+                          sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)),
+                          evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)))[6])),
+      0,
+      1)
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))]),
+ True,
+ True,
+ evm_mod(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), 32000000000000000000) == 0,
+ Not(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)) == 0),
+ ULE(calldataload(36), selfbalance(5306, 341)),
+ True,
+ Not(call_0(5455, 363, gas(5454, 362), Concat(0, Extract(159, 0, caller)), calldataload(36)) == 0)]
+output: None
+log: [([65622309289720611750453557674028511773342571987050230476218759540884465526289, sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4)))], Concat(0, Extract(159, 0, caller), calldataload(36), Store(storage, 0, 2)[evm_add(1, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)))]))]
+
+5414 REVERT
+stack:  [calldataload(36), caller, 2704, evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(Store(Store(Store(storage, 0, 2), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 0),
+            evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 1),
+            0),
+      evm_add(2, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))),
+      0)
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))]),
+ True,
+ True,
+ evm_mod(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), 32000000000000000000) == 0,
+ evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)) == 0,
+ Not(ULE(calldataload(36), selfbalance(5306, 351)))]
+output: 228264226241736076789315253437788395295290655968864242154051220442876821475138452412609791604325387667538211856168962205768445946871806458521150950280164845310866951531065294773403995027425850203416785408242747003061194699846996223112249344
+log: [([65622309289720611750453557674028511773342571987050230476218759540884465526289, sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4)))], Concat(0, Extract(159, 0, caller), calldataload(36), Store(storage, 0, 2)[evm_add(1, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)))]))]
+
+5597 REVERT
+stack:  [call_0(5455, 373, gas(5454, 372), Concat(0, Extract(159, 0, caller)), calldataload(36)), calldataload(36), caller, 2704, evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), calldataload(36), calldataload(4), 519, Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(Store(Store(Store(storage, 0, 2), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 0),
+            evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 1),
+            0),
+      evm_add(2, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))),
+      0)
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))]),
+ True,
+ True,
+ evm_mod(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), 32000000000000000000) == 0,
+ evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)) == 0,
+ ULE(calldataload(36), selfbalance(5306, 351)),
+ True,
+ call_0(5455, 373, gas(5454, 372), Concat(0, Extract(159, 0, caller)), calldataload(36)) == 0]
+output: 26431191654670037041093285164452199151988162856308936462170270969610284427678704919895385542767849696531847557284261174973126235652251563464311074502307597603043060337655440861386948282765364148280431993403418729217642410397712207955831510455046051672988737411558784881357736376873544250988290238662046451780311580672
+log: [([65622309289720611750453557674028511773342571987050230476218759540884465526289, sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4)))], Concat(0, Extract(159, 0, caller), calldataload(36), Store(storage, 0, 2)[evm_add(1, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)))]))]
+
+520 STOP
+stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
+storage: Store(Store(Store(Store(Store(storage, 0, 2), sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 0),
+                  evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 1),
+                  0),
+            evm_add(2, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))),
+            0),
+      0,
+      1)
+path: [Extract(255, 224, calldataload(0)) == 1001627438,
+ ULE(4, calldatasize),
+ Not(ULE(1883767413, Extract(255, 224, calldataload(0)))),
+ ULE(911641278, Extract(255, 224, calldataload(0))),
+ Not(ULE(1142788812, Extract(255, 224, calldataload(0)))),
+ Not(Extract(255, 224, calldataload(0)) == 911641278),
+ Extract(255, 224, calldataload(0)) == 1001627438,
+ callvalue == 0,
+ 64 <= evm_sub(calldatasize, 4),
+ Not(storage[0] == 2),
+ ULE(Store(storage, 0, 2)[evm_add(sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)), 2)], timestamp),
+ ULE(calldataload(36), Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))]),
+ True,
+ True,
+ evm_mod(evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)), 32000000000000000000) == 0,
+ evm_sub(Store(storage, 0, 2)[sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3))], calldataload(36)) == 0,
+ ULE(calldataload(36), selfbalance(5306, 351)),
+ True,
+ Not(call_0(5455, 373, gas(5454, 372), Concat(0, Extract(159, 0, caller)), calldataload(36)) == 0)]
+output: None
+log: [([65622309289720611750453557674028511773342571987050230476218759540884465526289, sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4)))], Concat(0, Extract(159, 0, caller), calldataload(36), Store(storage, 0, 2)[evm_add(1, sha3_512(Concat(sha3_576(Concat(Extract(159, 0, address), Extract(159, 0, caller), calldataload(4))), 3)))]))]
+
+443 REVERT
+stack:  []
+storage: storage
+path: [Extract(255, 224, calldataload(0)) == 1001627438, Not(ULE(4, calldatasize))]
+output: None
+log: []
+
+Total time (seconds): 1.01
