@@ -53,6 +53,8 @@ opcodes : Dict[str, str] = {
     '43' : 'NUMBER',
     '44' : 'DIFFICULTY',
     '45' : 'GASLIMIT',
+    '46' : 'CHAINID',
+    '47' : 'SELFBALANCE',
     '50' : 'POP',
     '51' : 'MLOAD',
     '52' : 'MSTORE',

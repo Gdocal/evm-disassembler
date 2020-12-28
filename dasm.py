@@ -122,7 +122,9 @@ f_caller = Function('caller', BitVecSort(256))
 f_address = Function('address', BitVecSort(256))
 f_extcodesize = Function('extcodesize', BitVecSort(256), BitVecSort(256)) # target address
 f_gas = Function('gas', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
-f_timestamp = Function('timestamp', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
+f_timestamp = Function('timestamp', BitVecSort(256))
+f_balance = Function('balance', BitVecSort(256), IntSort(), IntSort(), BitVecSort(256)) # target address, pc, cnt
+f_selfbalance = Function('selfbalance', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
 
 # convert opcode list to opcode map
 def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
@@ -566,7 +568,12 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         elif o.op[0] == 'GAS':
             ex.st.push(f_gas(ex.pc, ex.cnt))
         elif o.op[0] == 'TIMESTAMP':
-            ex.st.push(f_timestamp(ex.pc, ex.cnt))
+            ex.st.push(f_timestamp())
+
+        elif o.op[0] == 'BALANCE':
+            ex.st.push(f_balance(ex.st.pop(), ex.pc, ex.cnt))
+        elif o.op[0] == 'SELFBALANCE':
+            ex.st.push(f_selfbalance(ex.pc, ex.cnt))
 
         elif o.op[0] == 'CALL':
             call(ex, False)
