@@ -146,8 +146,9 @@ class Exec:
     calls: List[Any]
     # TODO: replace by step_id, fix cnt not incremented
     cnt: int
+    sstore_cnt: int
 
-    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], balance: Any, calls: List[Any], cnt: int) -> None:
+    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], balance: Any, calls: List[Any], cnt: int, sstore_cnt: int) -> None:
         self.pgm = pgm
         self.code = code
         self.st = st
@@ -159,6 +160,7 @@ class Exec:
         self.balance = balance
         self.calls = calls
         self.cnt = cnt
+        self.sstore_cnt = sstore_cnt
 
     def summary(self) -> str:
         return ''.join([
@@ -194,6 +196,12 @@ class Exec:
         self.pc += 1
         while self.pgm[self.pc] is None:
             self.pc += 1
+
+    def sstore(self, loc: Any, val: Any):
+        self.sstore_cnt += 1
+        new_storage = Array(f'storage{self.sstore_cnt}', BitVecSort(256), BitVecSort(256))
+        self.sol.add(new_storage == Store(self.storage, loc, val))
+        self.storage = new_storage
 
 # TODO: cleanup
 def simp(expr: Word) -> Word:
@@ -413,7 +421,7 @@ def jumpi(ex: Exec, stack: List[Exec], step_id: int) -> None:
             with start_action(action_type="z3 clone"):
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), ex.balance, ex.calls, ex.cnt)
+                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), ex.balance, ex.calls, ex.cnt, ex.sstore_cnt)
             stack.append((new_ex, step_id))
 #           if __debug__:
 #               print('jump')
@@ -610,7 +618,8 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         elif o.op[0] == 'SLOAD':
             ex.st.push(Select(ex.storage, ex.st.pop()))
         elif o.op[0] == 'SSTORE':
-            ex.storage = Store(ex.storage, ex.st.pop(), ex.st.pop())
+#           ex.storage = Store(ex.storage, ex.st.pop(), ex.st.pop())
+            ex.sstore(ex.st.pop(), ex.st.pop())
 
         elif o.op[0] == 'RETURNDATASIZE':
             ex.st.push(con(returndatasize(ex)))
@@ -668,9 +677,9 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
     return (out, steps)
 
 @log_call(include_args=[], include_result=False)
-def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], balance: Any = BitVec('balance', 256), calls: List[Any] = [], cnt: int = 0) -> Tuple[List[Exec], Steps]:
+def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], balance: Any = BitVec('balance', 256), calls: List[Any] = [], cnt: int = 0, sstore_cnt: int = 0) -> Tuple[List[Exec], Steps]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, balance, calls, cnt)
+    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, balance, calls, cnt, sstore_cnt)
     return run(ex)
 
 if __name__ == '__main__':
