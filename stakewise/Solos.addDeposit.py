@@ -16,20 +16,10 @@ sol = Solver()
 
 storage = Array('storage', BitVecSort(256), BitVecSort(256))
 
-#funsig = int(evm['methodIdentifiers']['addDeposit(bytes32)'], 16)
-#funsig = int(evm['methodIdentifiers']['cancelDeposit(bytes32,uint256)'], 16)
-#funsig = int(evm['methodIdentifiers']['setValidatorPrice(uint256)'], 16)
-#funsig = int(evm['methodIdentifiers']['setCancelLockDuration(uint256)'], 16)
-funsig = int(evm['methodIdentifiers']['registerValidator((bytes,bytes,bytes32,bytes32))'], 16)
+funsig = int(evm['methodIdentifiers']['addDeposit(bytes32)'], 16)
 
 # calldata
 sol.add(Extract(255, 224, f_calldataload(con(0))) == funsig) 
-sol.add(f_calldataload(con(4)) == con(32))
-sol.add(f_calldataload(con(4+32)) == con(32*4))
-sol.add(f_calldataload(con(4+32*2)) == con(32*4+32*3))
-sol.add(f_calldataload(con(4+32*5)) == con(48))
-sol.add(f_calldataload(con(4+32*8)) == con(96))
-sol.add(f_calldatasize() == con(4+32*12))
 
 start = timer()
 (exs, steps) = dasm(ops, code, sol, storage)

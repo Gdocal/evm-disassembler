@@ -16,9 +16,6 @@ sol = Solver()
 
 storage = Array('storage', BitVecSort(256), BitVecSort(256))
 
-#funsig = int(evm['methodIdentifiers']['addDeposit(bytes32)'], 16)
-#funsig = int(evm['methodIdentifiers']['cancelDeposit(bytes32,uint256)'], 16)
-#funsig = int(evm['methodIdentifiers']['setValidatorPrice(uint256)'], 16)
 funsig = int(evm['methodIdentifiers']['setCancelLockDuration(uint256)'], 16)
 
 # calldata
