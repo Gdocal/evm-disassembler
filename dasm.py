@@ -124,7 +124,7 @@ f_extcodesize = Function('extcodesize', BitVecSort(256), BitVecSort(256)) # targ
 f_gas = Function('gas', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
 f_timestamp = Function('timestamp', BitVecSort(256))
 f_balance = Function('balance', BitVecSort(256), IntSort(), IntSort(), BitVecSort(256)) # target address, pc, cnt
-f_selfbalance = Function('selfbalance', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
+#f_selfbalance = Function('selfbalance', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
 
 # convert opcode list to opcode map
 def ops_to_pgm(ops: List[Opcode]) -> List[Opcode]:
@@ -142,10 +142,12 @@ class Exec:
     storage: Any # Array('storage', BitVecSort(256), BitVecSort(256))
     output: Any
     log: List[Tuple[List[Word], Any]]
+    balance: Any
+    calls: List[Any]
     # TODO: replace by step_id, fix cnt not incremented
     cnt: int
 
-    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], cnt: int) -> None:
+    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], balance: Any, calls: List[Any], cnt: int) -> None:
         self.pgm = pgm
         self.code = code
         self.st = st
@@ -154,6 +156,8 @@ class Exec:
         self.storage = storage
         self.output = output
         self.log = log
+        self.balance = balance
+        self.calls = calls
         self.cnt = cnt
 
     def summary(self) -> str:
@@ -163,6 +167,8 @@ class Exec:
             "storage: ", str(self.storage), "\n",
             "output: " , str(self.output) , "\n",
             "log: "    , str(self.log)    , "\n",
+            "balance: ", str(self.balance), "\n",
+#           "calls:   ", str(self.calls)  , "\n",
             ])
 
     def __str__(self) -> str:
@@ -173,6 +179,8 @@ class Exec:
             "path: "   , str(self.sol)    , "\n",
             "output: " , str(self.output) , "\n",
             "log: "    , str(self.log)    , "\n",
+            "balance: ", str(self.balance), "\n",
+#           "calls:   ", str(self.calls)  , "\n",
             ])
 #       return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
 #              str(self.st) + "\n" + \
@@ -365,6 +373,8 @@ def call(ex: Exec, static: bool) -> None:
     ret_loc: int = ex.st.mloc()
     ret_size: int = int(str(ex.st.pop())) # size (in bytes) must be concrete
 
+    ex.balance = f_sub(ex.balance, fund)
+
     # push exit code
     if arg_size > 0:
         f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
@@ -374,6 +384,8 @@ def call(ex: Exec, static: bool) -> None:
         f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256),                         BitVecSort(256))
         exit_code = f_call(ex.pc, ex.cnt, gas, to, fund)
     ex.st.push(exit_code)
+
+    ex.calls.append(exit_code)
 
     # store return value
     if ret_size > 0:
@@ -401,7 +413,7 @@ def jumpi(ex: Exec, stack: List[Exec], step_id: int) -> None:
             with start_action(action_type="z3 clone"):
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), ex.cnt)
+                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), ex.balance, ex.calls, ex.cnt)
             stack.append((new_ex, step_id))
 #           if __debug__:
 #               print('jump')
@@ -577,7 +589,8 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         elif o.op[0] == 'BALANCE':
             ex.st.push(f_balance(ex.st.pop(), ex.pc, ex.cnt))
         elif o.op[0] == 'SELFBALANCE':
-            ex.st.push(f_selfbalance(ex.pc, ex.cnt))
+#           ex.st.push(f_selfbalance(ex.pc, ex.cnt))
+            ex.st.push(ex.balance)
 
         elif o.op[0] == 'CALL':
             call(ex, False)
@@ -655,9 +668,9 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
     return (out, steps)
 
 @log_call(include_args=[], include_result=False)
-def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], cnt: int = 0) -> Tuple[List[Exec], Steps]:
+def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], balance: Any = BitVec('balance', 256), calls: List[Any] = [], cnt: int = 0) -> Tuple[List[Exec], Steps]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, cnt)
+    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, balance, calls, cnt)
     return run(ex)
 
 if __name__ == '__main__':
