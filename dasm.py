@@ -254,8 +254,12 @@ def and_or(x: Word, y: Word, is_and: bool) -> Word:
             return (x & y)
         else:
             return (x | y)
+    elif eq(x.sort(), BoolSort()) and eq(y.sort(), BitVecSort(256)):
+        return and_or(If(x, con(1), con(0)), y, is_and)
+    elif eq(x.sort(), BitVecSort(256)) and eq(y.sort(), BoolSort()):
+        return and_or(x, If(y, con(1), con(0)), is_and)
     else:
-        print(x, y)
+        print(is_and, x, y)
         raise Exception('invalid argument of and/or: ' + x + y)
 
 def and_of(x: Word, y: Word) -> Word:
