@@ -8,6 +8,8 @@ from z3 import *
 from typing import List, Dict, Tuple, Any
 from byte2op import Opcode, decode
 
+from collections import defaultdict
+
 from timeit import default_timer as timer
 from eliot import to_file, log_call, start_action
 to_file(open("out.log", "w"))
@@ -121,9 +123,9 @@ f_callvalue = Function('callvalue', BitVecSort(256))
 f_caller = Function('caller', BitVecSort(256))
 f_address = Function('address', BitVecSort(256))
 f_extcodesize = Function('extcodesize', BitVecSort(256), BitVecSort(256)) # target address
-f_gas = Function('gas', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
+f_gas = Function('gas', IntSort(), BitVecSort(256)) # cnt
 f_timestamp = Function('timestamp', BitVecSort(256))
-f_balance = Function('balance', BitVecSort(256), IntSort(), IntSort(), BitVecSort(256)) # target address, pc, cnt
+f_balance = Function('balance', BitVecSort(256), IntSort(), BitVecSort(256)) # target address, cnt
 #f_selfbalance = Function('selfbalance', IntSort(), IntSort(), BitVecSort(256)) # pc, cnt
 
 # convert opcode list to opcode map
@@ -143,12 +145,9 @@ class Exec:
     output: Any
     log: List[Tuple[List[Word], Any]]
     balance: Any
-    # TODO: replace by step_id, fix cnt not incremented
-    cnt: int
-    sstore_cnt: int
-    call_cnt: int
+    cnts: Dict[str,int]
 
-    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], balance: Any, cnt: int, sstore_cnt: int, call_cnt: int) -> None:
+    def __init__(self, pgm: List[Opcode], code: List[str], st: State, pc: int, sol: Solver, storage: Any, output: Any, log: List[Tuple[List[Word], Any]], balance: Any, cnts: Dict[str,int]) -> None:
         self.pgm = pgm
         self.code = code
         self.st = st
@@ -158,9 +157,10 @@ class Exec:
         self.output = output
         self.log = log
         self.balance = balance
-        self.cnt = cnt
-        self.sstore_cnt = sstore_cnt
-        self.call_cnt = call_cnt
+        self.cnts = cnts
+
+    def str_cnts(self) -> str:
+        return ''.join([f'{x[0]}: {x[1]}\n' for x in sorted(self.cnts.items(), key=lambda x: x[0])])
 
     def summary(self) -> str:
         return ''.join([
@@ -181,6 +181,8 @@ class Exec:
             "path: "   , str(self.sol)    , "\n",
             "output: " , str(self.output) , "\n",
             "log: "    , str(self.log)    , "\n",
+            "opcodes:\n", self.str_cnts(),
+            "memsize: ", str(len(self.st.memory)), "\n",
             ])
 #       return str(self.pc) + " " + str(self.pgm[self.pc].op[0]) + "\n" + \
 #              str(self.st) + "\n" + \
@@ -190,16 +192,23 @@ class Exec:
 #              "log: " + str(self.log) + "\n"
 
     def next_pc(self) -> int:
-        self.cnt += 1
         self.pc += 1
         while self.pgm[self.pc] is None:
             self.pc += 1
 
     def sstore(self, loc: Any, val: Any):
-        self.sstore_cnt += 1
-        new_storage = Array(f'storage{self.sstore_cnt}', BitVecSort(256), BitVecSort(256))
+        new_storage = Array(f'storage{self.cnt_sstore()}', BitVecSort(256), BitVecSort(256))
         self.sol.add(new_storage == Store(self.storage, loc, val))
         self.storage = new_storage
+
+    def cnt_call(self) -> int:
+        return self.cnts['CALL'] + self.cnts['STATICCALL']
+    def cnt_sstore(self) -> int:
+        return self.cnts['SSTORE']
+    def cnt_gas(self) -> int:
+        return self.cnts['GAS']
+    def cnt_balance(self) -> int:
+        return self.cnts['BALANCE']
 
 # TODO: cleanup
 def simp(expr: Word) -> Word:
@@ -383,15 +392,14 @@ def call(ex: Exec, static: bool) -> None:
 
     # push exit code
     if arg_size > 0:
-        f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
-        exit_code = f_call(ex.pc, ex.cnt, gas, to, fund, simplify(wload(ex.st.memory, arg_loc, arg_size)))
+        f_call = Function('call_'+str(arg_size*8), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256), BitVecSort(arg_size*8), BitVecSort(256))
+        exit_code = f_call(ex.cnt_call(), gas, to, fund, simplify(wload(ex.st.memory, arg_loc, arg_size)))
     else:
         assert arg_size == 0
-        f_call = Function('call_'+str(arg_size*8), IntSort(), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256),                         BitVecSort(256))
-        exit_code = f_call(ex.pc, ex.cnt, gas, to, fund)
+        f_call = Function('call_'+str(arg_size*8), IntSort(), BitVecSort(256), BitVecSort(256), BitVecSort(256),                         BitVecSort(256))
+        exit_code = f_call(ex.cnt_call(), gas, to, fund)
 #   ex.st.push(exit_code)
-    ex.call_cnt += 1
-    exit_code_var = BitVec(f'call{ex.call_cnt}', 256)
+    exit_code_var = BitVec(f'call{ex.cnt_call()}', 256)
     ex.sol.add(exit_code_var == exit_code)
     ex.st.push(exit_code_var)
 
@@ -422,7 +430,7 @@ def jumpi(ex: Exec, stack: List[Exec], step_id: int) -> None:
             with start_action(action_type="z3 clone"):
                 new_sol = Solver()
                 new_sol.add(ex.sol.assertions())
-                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), deepcopy(ex.balance), ex.cnt, ex.sstore_cnt, ex.call_cnt)
+                new_ex = Exec(ex.pgm, ex.code, deepcopy(ex.st), target, new_sol, deepcopy(ex.storage), deepcopy(ex.output), deepcopy(ex.log), deepcopy(ex.balance), deepcopy(ex.cnts))
             stack.append((new_ex, step_id))
 #           if __debug__:
 #               print('jump')
@@ -461,6 +469,7 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         step_id += 1
 
         o = ex.pgm[ex.pc]
+        ex.cnts[o.op[0]] += 1
 
         if __debug__:
             if o.op[0] == 'JUMPI':
@@ -591,12 +600,12 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         elif o.op[0] == 'EXTCODESIZE':
             ex.st.push(f_extcodesize(ex.st.pop()))
         elif o.op[0] == 'GAS':
-            ex.st.push(f_gas(ex.pc, ex.cnt))
+            ex.st.push(f_gas(ex.cnt_gas()))
         elif o.op[0] == 'TIMESTAMP':
             ex.st.push(f_timestamp())
 
         elif o.op[0] == 'BALANCE':
-            ex.st.push(f_balance(ex.st.pop(), ex.pc, ex.cnt))
+            ex.st.push(f_balance(ex.st.pop(), ex.cnt_balance()))
         elif o.op[0] == 'SELFBALANCE':
 #           ex.st.push(f_selfbalance(ex.pc, ex.cnt))
             ex.st.push(ex.balance)
@@ -678,9 +687,9 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
     return (out, steps)
 
 @log_call(include_args=[], include_result=False)
-def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], balance: Any = BitVec('balance', 256), cnt: int = 0, sstore_cnt: int = 0, call_cnt: int = 0) -> Tuple[List[Exec], Steps]:
+def dasm(ops: List[Opcode], code: List[str], sol: Solver = Solver(), storage: Any = Array('storage', BitVecSort(256), BitVecSort(256)), output: Any = None, log = [], balance: Any = BitVec('balance', 256), cnts: Dict[str,int] = defaultdict(int)) -> Tuple[List[Exec], Steps]:
     st = State()
-    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, balance, cnt, sstore_cnt, call_cnt)
+    ex = Exec(ops_to_pgm(ops), code, st, 0, sol, storage, output, log, balance, cnts)
     return run(ex)
 
 if __name__ == '__main__':
