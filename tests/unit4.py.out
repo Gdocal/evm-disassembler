@@ -1,47 +1,64 @@
 67 REVERT
 stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
-memory[0]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[32]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[64]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
 storage: storage
-path: [ULE(4, calldatasize),
- Not(Extract(255, 224, calldataload(0)) == 1264903314)]
+balance: balance
+path: [ULE(4, calldatasize), Not(Extract(255, 224, calldataload(0)) == 1264903314)]
 output: None
 log: []
+opcodes:
+JUMPI: 2
+_0_zero: 1
+_1_jumpdest: 1
+_2_base: 1
+_3_verylow: 18
+_5_low: 1
+memsize: 96
 
 78 REVERT
 stack:  [callvalue, Concat(0, Extract(255, 224, calldataload(0)))]
-memory[0]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[32]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[64]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
 storage: storage
-path: [ULE(4, calldatasize),
- Extract(255, 224, calldataload(0)) == 1264903314,
- Not(callvalue == 0)]
+balance: balance
+path: [ULE(4, calldatasize), Extract(255, 224, calldataload(0)) == 1264903314, Not(callvalue == 0)]
 output: None
 log: []
+opcodes:
+JUMPI: 3
+_0_zero: 1
+_1_jumpdest: 1
+_2_base: 2
+_3_verylow: 21
+_5_low: 1
+memsize: 96
 
 195 RETURN
 stack:  [Concat(0, Extract(255, 224, calldataload(0)))]
-memory[0]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[32]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[64]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
-memory[96]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[128]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Extract(159, 152, calldataload(4)), Extract(151, 144, calldataload(4)), Extract(143, 136, calldataload(4)), Extract(135, 128, calldataload(4)), Extract(127, 120, calldataload(4)), Extract(119, 112, calldataload(4)), Extract(111, 104, calldataload(4)), Extract(103, 96, calldataload(4)), Extract(95, 88, calldataload(4)), Extract(87, 80, calldataload(4)), Extract(79, 72, calldataload(4)), Extract(71, 64, calldataload(4)), Extract(63, 56, calldataload(4)), Extract(55, 48, calldataload(4)), Extract(47, 40, calldataload(4)), Extract(39, 32, calldataload(4)), Extract(31, 24, calldataload(4)), Extract(23, 16, calldataload(4)), Extract(15, 8, calldataload(4)), Extract(7, 0, calldataload(4))]
 storage: storage
-path: [ULE(4, calldatasize),
- Extract(255, 224, calldataload(0)) == 1264903314,
- callvalue == 0]
+balance: balance
+path: [ULE(4, calldatasize), Extract(255, 224, calldataload(0)) == 1264903314, callvalue == 0]
 output: Concat(0, Extract(159, 0, calldataload(4)))
 log: []
+opcodes:
+JUMP: 2
+JUMPI: 3
+_0_zero: 1
+_1_jumpdest: 4
+_2_base: 11
+_3_verylow: 63
+_5_low: 1
+memsize: 160
 
 67 REVERT
 stack:  []
-memory[0]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[32]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-memory[64]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128]
 storage: storage
+balance: balance
 path: [Not(ULE(4, calldatasize))]
 output: None
 log: []
+opcodes:
+JUMPI: 1
+_0_zero: 1
+_1_jumpdest: 1
+_2_base: 1
+_3_verylow: 8
+memsize: 96
 

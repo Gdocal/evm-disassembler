@@ -6,6 +6,8 @@ import os
 import json
 dir_path = os.path.dirname(os.path.realpath(__file__))
 with open(f'{dir_path}/11366ec.json') as f:
+#with open(f'{dir_path}/105510d.json') as f:
+#with open(f'{dir_path}/e9a7ce3.json') as f:
     evm = json.load(f)['output']['contracts']['contracts/tokens/StakedTokens.sol']['StakedTokens']['evm']
 
 hexcode = evm['deployedBytecode']['object']
