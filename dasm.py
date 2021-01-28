@@ -376,6 +376,7 @@ f_exp  = Function('evm_exp',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
 f_add  = Function('evm_add',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
 f_sub  = Function('evm_sub',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
 f_mul  = Function('evm_mul',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
+f_xor  = Function('evm_xor',  BitVecSort(256), BitVecSort(256), BitVecSort(256))
 
 def is_power_of_two(x: int) -> bool:
     if x > 0:
@@ -663,6 +664,9 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         elif o.op[0] == 'SHR':
             w = ex.st.pop()
             ex.st.push(LShR(ex.st.pop(), w))
+
+        elif o.op[0] == 'XOR':
+            ex.st.push(f_xor(ex.st.pop(), ex.st.pop()))
 
         elif o.op[0] == 'CALLDATALOAD':
             ex.st.push(f_calldataload(ex.st.pop()))
