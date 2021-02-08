@@ -12,7 +12,12 @@
      export LD_LIBRARY_PATH=$Z3/bin:$LD_LIBRARY_PATH      (Linux)
      ```
  * Eliot (for profiling): See more https://eliot.readthedocs.io/en/stable/quickstart.html
-   * Quick install
+   * (optional) Create virtual environment
+     ```
+     $ python3.6 -m venv venv
+     $ source venv/bin/activate
+     ```
+   * Install
      ```
      $ pip install eliot eliot-tree
      ```
