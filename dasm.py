@@ -287,6 +287,12 @@ class Exec:
     def cnt_balance(self) -> int:
         return self.cnts['BALANCE']
 
+def read_code(code: List[str], idx: int) -> str:
+    if idx < len(code):
+        return code[idx]
+    else:
+        return '00'
+
 # TODO: cleanup
 def simp(expr: Word) -> Word:
 #   print("start " + str(expr))
@@ -680,6 +686,8 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
             ex.st.push(f_address())
         elif o.op[0] == 'EXTCODESIZE':
             ex.st.push(f_extcodesize(ex.st.pop()))
+        elif o.op[0] == 'CODESIZE':
+            ex.st.push(con(len(ex.code)))
         elif o.op[0] == 'GAS':
             ex.st.push(f_gas(ex.cnt_gas()))
         elif o.op[0] == 'TIMESTAMP':
@@ -731,7 +739,7 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
             while len(ex.st.memory) < loc + size:
                 ex.st.memory.extend([BitVecVal(0, 8) for _ in range(32)])
             for i in range(size):
-                ex.st.memory[loc + i] = BitVecVal(int(ex.code[pc + i], 16), 8)
+                ex.st.memory[loc + i] = BitVecVal(int(read_code(ex.code, pc + i), 16), 8)
 
         elif o.op[0] == 'BYTE':
             idx: int = int(str(ex.st.pop())) # index must be concrete
