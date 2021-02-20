@@ -558,6 +558,8 @@ def run(ex0: Exec) -> Tuple[List[Exec], Steps]:
         if __debug__:
             if o.op[0] == 'JUMPI':
                 steps[step_id] = {'parent': prev_step_id, 'exec': str(ex)}
+#           elif o.op[0] == 'CALL':
+#               steps[step_id] = {'parent': prev_step_id, 'exec': str(ex) + ex.st.str_memory() + '\n'}
             else:
                 steps[step_id] = {'parent': prev_step_id, 'exec': ex.summary()}
 #           print(ex)
